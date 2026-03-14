@@ -1,0 +1,6 @@
+Næste release-trin
+- bane 3 og 4
+- boss-bane
+- introfilm med voice-over
+- butiksscreenshots fra den nye version
+- native eksport via Godot/Unity til App Store / Google Play / Steam
