@@ -1,0 +1,1 @@
+Sarah’s Adventure ❤️ – PWA v12\n\nForbedringer:\n- helt ny forside-layout\n- spil-laget skjules helt bag coveret\n- renere tekst og knapper\n- lidt højere gameplay\n

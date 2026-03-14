@@ -1,0 +1,1 @@
+const CACHE_NAME='sarah-adventure-v12';const ASSETS=['./','./index.html','./manifest.json','./sw.js','./assets/icon-192.png','./assets/icon-512.png','./assets/cover.jpg'];self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
