@@ -1,250 +1,137 @@
-
 <!DOCTYPE html>
 <html lang="da">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#ff5ca8">
-<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f45cab">
 <title>Sarah’s Adventure ❤️</title>
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#13253f}
-#app{position:fixed;inset:0;overflow:hidden}
-canvas{display:block;width:100vw;height:100vh}
-.hidden{display:none!important}
-#gameLayer{position:absolute;inset:0}
-#hud,#title{position:absolute;z-index:6;color:#fff;font-weight:bold;background:rgba(0,0,0,.34);border-radius:16px;padding:10px 16px;backdrop-filter:blur(4px)}
-#hud{left:10px;top:10px;font-size:clamp(14px,2vw,18px)}
-#title{left:50%;top:10px;transform:translateX(-50%);font-size:clamp(16px,2.2vw,20px)}
-#controls{position:absolute;left:0;right:0;bottom:10px;z-index:7;display:flex;justify-content:space-between;padding:0 12px}
-.group{display:flex;gap:10px}
-.btn{width:min(11vw,56px);height:min(11vw,56px);min-width:44px;min-height:44px;border-radius:50%;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;color:#fff;font-size:clamp(18px,4vw,26px)}
-#startScreen{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:flex-start;padding-left:clamp(20px,6vw,70px);padding-right:20px}
-.cover{position:absolute;inset:0;background:url('assets/cover.jpg') 62% center / cover no-repeat}
-.shade{position:absolute;inset:0;background:linear-gradient(90deg, rgba(6,12,24,.92) 0%, rgba(6,12,24,.74) 34%, rgba(6,12,24,.26) 100%)}
-.content{position:relative;z-index:2;width:min(500px,84vw);color:#fff}
-.badge{display:inline-block;background:#f45cab;padding:10px 18px;border-radius:999px;font-size:clamp(16px,2vw,22px);font-weight:700;margin-bottom:18px}
-h1{margin:0 0 14px 0;font-size:clamp(46px,7.2vw,94px);line-height:.90;font-weight:900;letter-spacing:-0.02em}
-.sub{margin:0 0 26px 0;font-size:clamp(16px,2vw,22px);max-width:460px;line-height:1.18;color:rgba(255,255,255,.96)}
-.startRow{display:flex;gap:14px;flex-wrap:wrap}
-.startBtn{border:none;border-radius:20px;padding:18px 34px;font-size:clamp(18px,2.2vw,22px);font-weight:800;color:#fff}
-.primary{background:#f45cab}.secondary{background:#5c84ff}
-#rotate{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(7,16,30,.94);color:#fff;z-index:40;text-align:center;padding:24px}
-</style>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div id="app">
-  <div id="gameLayer" class="hidden">
-    <div id="hud"></div>
-    <div id="title">Love Beach</div>
-    <canvas id="game"></canvas>
+  <section id="splash" class="layer">
+    <div class="cover-bg"></div>
+    <div class="cover-overlay"></div>
+    <div class="splash-logo">Sarah’s Adventure</div>
+    <div class="splash-sub">Til min prinsesse Sarah ❤️</div>
+    <div class="tap-tip">Tryk for at åbne spillet</div>
+  </section>
+
+  <section id="intro" class="overlay hidden">
+    <div class="dialog">
+      <h2>🎬 Introfilm</h2>
+      <p id="introText">Dette spil er lavet til min elskede Sarah ❤️</p>
+      <button class="menu-btn pink small" id="nextIntroBtn">Næste</button>
+    </div>
+  </section>
+
+  <section id="menu" class="layer hidden">
+    <div class="cover-bg"></div>
+    <div class="cover-overlay"></div>
+    <div class="menu-panel">
+      <div class="panel-glass">
+        <div class="menu-badge">Til min prinsesse Sarah ❤️</div>
+        <div class="menu-buttons">
+          <button class="menu-btn pink" id="newGameBtn">Nyt spil</button>
+          <button class="menu-btn blue" id="continueBtn">Fortsæt</button>
+          <button class="menu-btn soft" id="mapBtn">Verdenskort</button>
+          <button class="menu-btn soft" id="casinoBtn">Sarah Casino</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="map" class="layer hidden">
+    <div class="map-bg"></div>
+    <div class="map-top">
+      <div class="glass big">Verdenskort</div>
+      <div class="glass" id="mapStats">🪙 0 &nbsp; ❤️ 3 &nbsp; 💌 0/5</div>
+      <button class="menu-btn blue small" id="mapBackBtn">Menu</button>
+    </div>
+    <div class="map-world">
+      <div class="map-path"></div>
+      <button class="map-node current" data-level="1">1<small>Kærlighedsstranden</small></button>
+      <button class="map-node locked" data-level="2" disabled>2<small>Palmeøen</small></button>
+      <button class="map-node locked" data-level="3" disabled>3<small>Solbugten</small></button>
+      <button class="map-node locked" data-level="4" disabled>4<small>Skatkysten</small></button>
+      <button class="map-node locked" data-level="5" disabled>5<small>Boss-bane</small></button>
+    </div>
+  </section>
+
+  <section id="casino" class="overlay hidden">
+    <div class="dialog">
+      <h2>🎰 Sarah Casino</h2>
+      <p>Et spin koster 10 mønter.</p>
+      <div id="slotReels" class="slot-reels">💋 ❤️ 🪙</div>
+      <p id="slotResult">Klar til spin</p>
+      <div class="dialog-row">
+        <button class="menu-btn pink small" id="spinBtn">Spin</button>
+        <button class="menu-btn blue small" id="closeCasinoBtn">Luk</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="game" class="layer hidden">
+    <div id="hud" class="glass hud"></div>
+    <div id="levelTitle" class="glass center">Bane 1</div>
+    <canvas id="canvas"></canvas>
+    <div id="bossBar" class="glass bossbar hidden">Boss ❤️ 100%</div>
     <div id="controls">
       <div class="group">
-        <div class="btn" id="left">◀</div>
-        <div class="btn" id="right">▶</div>
+        <div class="ctrl" id="left">◀</div>
+        <div class="ctrl" id="right">▶</div>
       </div>
       <div class="group">
-        <div class="btn" id="jump">▲</div>
-        <div class="btn" id="kiss">💋</div>
-        <div class="btn" id="pauseBtn">⏸</div>
+        <div class="ctrl" id="jump">▲</div>
+        <div class="ctrl" id="kiss">💋</div>
+        <div class="ctrl" id="pauseBtn">⏸</div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div id="startScreen">
-    <div class="cover"></div>
-    <div class="shade"></div>
-    <div class="content">
-      <div class="badge">Til min prinsesse Sarah ❤️</div>
-      <h1>Sarah’s<br>Adventure</h1>
-      <p class="sub">Et flottere cover, skjulte spilknapper på forsiden og bedre flow i selve spillet.</p>
-      <div class="startRow">
-        <button class="startBtn primary" onclick="startGame()">Nyt spil</button>
-        <button class="startBtn secondary" onclick="startGame()">Fortsæt</button>
+  <section id="letterModal" class="overlay hidden">
+    <div class="dialog">
+      <h2>💌 Kærlighedsbrev fundet</h2>
+      <p id="letterText">Du er mit livs største eventyr ❤️</p>
+      <button class="menu-btn pink small" id="closeLetterBtn">Videre</button>
+    </div>
+  </section>
+
+  <section id="completeModal" class="overlay hidden">
+    <div class="dialog">
+      <h2 id="completeTitle">Bane gennemført!</h2>
+      <p id="completeText">Du klarede banen. Næste bane er nu låst op.</p>
+      <div class="dialog-row">
+        <button class="menu-btn pink small" id="toSudokuBtn">Videre til sudoku</button>
+        <button class="menu-btn blue small" id="toMapBtn">Til kortet</button>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div id="rotate"><div><h2>Drej telefonen</h2><p>Spillet er lavet til landscape.</p></div></div>
+  <section id="sudokuModal" class="overlay hidden">
+    <div class="dialog">
+      <h2>Svær sudoku</h2>
+      <p id="sudokuStatus">Tryk tallene i rækkefølgen 1 → 2 → 3</p>
+      <div class="sudoku-grid">
+        <div class="sudoku-cell" data-n="2">2</div>
+        <div class="sudoku-cell" data-n="1">1</div>
+        <div class="sudoku-cell" data-n="3">3</div>
+      </div>
+      <div class="dialog-row">
+        <button class="menu-btn pink small" id="skipSudokuBtn">Spring over</button>
+        <button class="menu-btn blue small" id="closeSudokuBtn">Til kortet</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="rotate" class="overlay hidden">
+    <div class="dialog">
+      <h2>Drej telefonen</h2>
+      <p>Sarah’s Adventure er lavet til landscape.</p>
+    </div>
+  </section>
 </div>
-
-<script>
-const gameLayer=document.getElementById('gameLayer');
-const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
-const hud=document.getElementById('hud'),title=document.getElementById('title'),controls=document.getElementById('controls');
-const startScreen=document.getElementById('startScreen'),rotate=document.getElementById('rotate');
-let running=false, paused=false, t=0, cameraX=0, coins=0, lives=3;
-const groundY=386, worldWidth=4300;
-const player={x:120,y:0,w:34,h:48,vx:0,vy:0,onGround:false};
-const platforms=[
-  {x:150,y:328,w:120,h:18},{x:305,y:292,w:120,h:18},{x:470,y:258,w:120,h:18},
-  {x:850,y:322,w:120,h:18},{x:1125,y:286,w:120,h:18},{x:1420,y:252,w:120,h:18},
-  {x:1940,y:330,w:140,h:18},{x:2280,y:292,w:140,h:18},{x:2640,y:256,w:120,h:18},
-  {x:3360,y:330,w:120,h:18}
-];
-const coinsArr=[];
-[{x:140,y:340},{x:190,y:310},{x:240,y:280},{x:290,y:250},{x:445,y:282},{x:495,y:252}].forEach(p=>coinsArr.push({...p,r:14,taken:false,rot:0}));
-for(let i=0;i<24;i++) coinsArr.push({x:620+i*126,y:[340,310,280,250][i%4],r:14,taken:false,rot:0});
-const crabs=[
-  {x:690,y:362,w:40,h:24,dir:1,min:640,max:820},
-  {x:1410,y:362,w:40,h:24,dir:-1,min:1360,max:1520},
-  {x:2630,y:362,w:40,h:24,dir:1,min:2580,max:2740}
-];
-const boss={x:3920,y:318,w:130,h:78,health:6,maxHealth:6,alive:true};
-let heartShot=null;
-
-function resize(){
-  canvas.width=window.innerWidth*devicePixelRatio;
-  canvas.height=window.innerHeight*devicePixelRatio;
-  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-  rotate.style.display=window.innerWidth>=window.innerHeight?'none':'flex';
-}
-window.addEventListener('resize',resize); resize();
-
-function updateHud(){hud.innerHTML='❤️'.repeat(lives)+' &nbsp; 🪙 '+coins+' &nbsp; 💌 0/1';}
-function resetGame(){
-  running=false; paused=false; t=0; cameraX=0; coins=0; lives=3; heartShot=null;
-  player.x=120; player.y=groundY-player.h; player.vx=0; player.vy=0; player.onGround=true;
-  coinsArr.forEach(c=>c.taken=false); boss.alive=true; boss.health=boss.maxHealth;
-  updateHud();
-}
-function startGame(){
-  resetGame();
-  startScreen.classList.add('hidden');
-  gameLayer.classList.remove('hidden');
-  running=true;
-}
-function overlap(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;}
-function hurt(){
-  lives=Math.max(1,lives-1);
-  player.x=Math.max(90,player.x-120);
-  player.y=groundY-player.h; player.vx=0; player.vy=0;
-  updateHud();
-}
-function jump(){if(player.onGround&&!paused){player.vy=-11.5; player.onGround=false;}}
-function fireHeart(){if(paused||heartShot)return; heartShot={x:player.x+34,y:player.y+22,vx:9};}
-function step(){
- if(!running||paused)return;
- player.vy+=0.58; player.x+=player.vx; player.y+=player.vy; player.onGround=false;
- if(player.y+player.h>=groundY){player.y=groundY-player.h; player.vy=0; player.onGround=true;}
- for(const p of platforms){
-   if(player.vy>=0&&player.x+player.w>p.x&&player.x<p.x+p.w&&player.y+player.h>=p.y&&player.y+player.h<=p.y+20){
-     player.y=p.y-player.h; player.vy=0; player.onGround=true;
-   }
- }
- if(player.x<0)player.x=0; if(player.x>worldWidth-player.w)player.x=worldWidth-player.w;
- cameraX=player.x-window.innerWidth*0.14; if(cameraX<0)cameraX=0;
- for(const c of coinsArr){
-   if(!c.taken){
-     const dx=(player.x+player.w/2)-c.x, dy=(player.y+player.h/2)-c.y;
-     if(Math.sqrt(dx*dx+dy*dy)<30){c.taken=true; coins++; updateHud();}
-   }
- }
- for(const c of crabs){
-   c.x+=c.dir*1.5; if(c.x<c.min||c.x>c.max)c.dir*=-1;
-   if(overlap(player,c))hurt();
-   if(heartShot&&heartShot.x>c.x&&heartShot.x<c.x+c.w&&heartShot.y>c.y&&heartShot.y<c.y+c.h){heartShot=null;c.x=c.min;}
- }
- if(heartShot){heartShot.x+=heartShot.vx; if(heartShot.x>cameraX+window.innerWidth+200)heartShot=null;}
- if(boss.alive){
-   if(overlap(player,boss)){
-     const stomp=player.vy>0&&(player.y+player.h-boss.y)<24;
-     if(stomp){boss.health--; player.vy=-10; player.y=boss.y-player.h-2;} else hurt();
-   }
-   if(heartShot&&heartShot.x>boss.x&&heartShot.x<boss.x+boss.w&&heartShot.y>boss.y&&heartShot.y<boss.y+boss.h){boss.health--; heartShot=null;}
-   if(boss.health<=0)boss.alive=false;
- }
-}
-function cloud(x,y,s,a){
- ctx.fillStyle='rgba(255,255,255,'+a+')';
- ctx.beginPath(); ctx.arc(x,y,22*s,0,Math.PI*2); ctx.fill();
- ctx.beginPath(); ctx.arc(x+22*s,y-10*s,18*s,0,Math.PI*2); ctx.fill();
- ctx.beginPath(); ctx.arc(x+45*s,y,22*s,0,Math.PI*2); ctx.fill();
- ctx.fillRect(x-4*s,y,50*s,20*s);
-}
-function palm(x){
- const sx=x-cameraX;
- ctx.fillStyle='#8b5a2b'; ctx.fillRect(sx,290,14,96);
- ctx.fillStyle='#31c46f';
- for(let i=0;i<5;i++){ctx.beginPath(); ctx.ellipse(sx+7,296,(34-i*2),10,(-0.9+i*0.45),0,Math.PI*2); ctx.fill();}
-}
-function draw(){
- const grad=ctx.createLinearGradient(0,0,0,window.innerHeight);
- grad.addColorStop(0,'#87d9ff'); grad.addColorStop(.48,'#c7f2ff'); grad.addColorStop(.48,'#53b7d8'); grad.addColorStop(.60,'#53b7d8'); grad.addColorStop(.60,'#f1d08b'); grad.addColorStop(1,'#f1d08b');
- ctx.fillStyle=grad; ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
-
- cloud(160-cameraX*0.08,90,1,0.70); cloud(460-cameraX*0.10,72,1.2,0.72); cloud(820-cameraX*0.12,100,.95,0.68);
-
- ctx.fillStyle='#53b7d8'; ctx.fillRect(0,290,window.innerWidth,56);
- ctx.fillStyle='rgba(255,255,255,.22)';
- for(let i=0;i<24;i++){
-   const wx=((i*120-cameraX*0.75)%1200+1200)%1200;
-   const y=302+(i%3)*9+Math.sin((t+i*10)*0.04)*2;
-   ctx.fillRect(wx,y,72,4);
- }
-
- ctx.fillStyle='#f1d08b'; ctx.fillRect(-cameraX,groundY,worldWidth,150);
- ctx.fillStyle='rgba(160,120,50,.28)'; ctx.fillRect(-cameraX,groundY,worldWidth,8);
-
- const dx1=1400+((t*2)%220)-cameraX, dy1=320-Math.sin(t*0.05)*10;
- ctx.fillStyle='#7da2ff'; ctx.beginPath(); ctx.moveTo(dx1,dy1); ctx.quadraticCurveTo(dx1+28,dy1-18,dx1+58,dy1-4); ctx.quadraticCurveTo(dx1+28,dy1+10,dx1,dy1); ctx.fill();
-
- [640,1380,2200,3040,3880].forEach(palm);
-
- for(const p of platforms){
-   ctx.fillStyle='#e9c47f'; ctx.fillRect(p.x-cameraX,p.y,p.w,p.h);
-   ctx.fillStyle='#c9964f'; ctx.fillRect(p.x-cameraX,p.y,p.w,4);
- }
-
- for(const c of coinsArr){
-   if(c.taken)continue;
-   c.rot+=0.12;
-   ctx.save(); ctx.translate(c.x-cameraX,c.y); ctx.scale(Math.abs(Math.cos(c.rot))*0.7+0.3,1);
-   ctx.fillStyle='gold'; ctx.beginPath(); ctx.arc(0,0,c.r,0,Math.PI*2); ctx.fill();
-   ctx.restore();
- }
-
- for(const c of crabs){
-   const x=c.x-cameraX,y=c.y;
-   ctx.fillStyle='#d93b3b'; ctx.beginPath(); ctx.ellipse(x+c.w/2,y+10,c.w/2,12,0,0,Math.PI*2); ctx.fill();
-   ctx.fillRect(x+6,y+16,6,8); ctx.fillRect(x+26,y+16,6,8);
- }
-
- if(boss.alive){
-   const x=boss.x-cameraX,y=boss.y;
-   ctx.fillStyle='#8e44ad'; ctx.beginPath(); ctx.ellipse(x+boss.w/2,y+30,boss.w/2,32,0,0,Math.PI*2); ctx.fill();
-   ctx.fillStyle='rgba(0,0,0,.35)'; ctx.fillRect(x,y-32,120,10);
-   ctx.fillStyle='#ff5aa5'; ctx.fillRect(x,y-32,120*(boss.health/boss.maxHealth),10);
- }
-
- if(heartShot){
-   const x=heartShot.x-cameraX,y=heartShot.y;
-   ctx.fillStyle='#ff4f92'; ctx.beginPath();
-   ctx.moveTo(x,y+6); ctx.bezierCurveTo(x-8,y-6,x-20,y+8,x,y+22); ctx.bezierCurveTo(x+20,y+8,x+8,y-6,x,y+6); ctx.fill();
- }
-
- const x=player.x-cameraX,y=player.y-8;
- ctx.fillStyle='#ffb6d8'; ctx.fillRect(x+8,y+22,22,32);
- ctx.fillStyle='#f2c8a0'; ctx.beginPath(); ctx.arc(x+19,y+13,13,0,Math.PI*2); ctx.fill();
- ctx.fillStyle='#f0d269'; ctx.beginPath(); ctx.arc(x+19,y+10,13,0,Math.PI); ctx.fill();
- ctx.fillStyle='#fff'; ctx.fillRect(x+10,y+54,8,14); ctx.fillRect(x+22,y+54,8,14);
-}
-function loop(){t++; step(); draw(); requestAnimationFrame(loop);}
-loop();
-
-function setLeft(on){player.vx=on?-4:(player.vx<0?0:player.vx);}
-function setRight(on){player.vx=on?4:(player.vx>0?0:player.vx);}
-document.getElementById('left').ontouchstart=e=>{e.preventDefault();setLeft(true)};
-document.getElementById('left').ontouchend=e=>{e.preventDefault();setLeft(false)};
-document.getElementById('right').ontouchstart=e=>{e.preventDefault();setRight(true)};
-document.getElementById('right').ontouchend=e=>{e.preventDefault();setRight(false)};
-document.getElementById('jump').ontouchstart=e=>{e.preventDefault();jump()};
-document.getElementById('kiss').ontouchstart=e=>{e.preventDefault();fireHeart()};
-document.getElementById('pauseBtn').onclick=()=>{paused=!paused};
-document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')setLeft(true); if(e.key==='ArrowRight')setRight(true); if(e.key==='ArrowUp'||e.key===' ')jump(); if(e.key.toLowerCase()==='x')fireHeart(); if(e.key.toLowerCase()==='p')paused=!paused;});
-document.addEventListener('keyup',e=>{if(e.key==='ArrowLeft')setLeft(false); if(e.key==='ArrowRight')setRight(false);});
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));}
-</script>
+<script src="app.js"></script>
 </body>
 </html>

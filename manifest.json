@@ -1,10 +1,10 @@
 {
   "name": "Sarah’s Adventure ❤️",
-  "short_name": "Sarah’s Adventure ❤️",
+  "short_name": "Sarah’s Adventure",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#13253f",
-  "theme_color": "#ff5ca8",
+  "background_color": "#07192d",
+  "theme_color": "#f45cab",
   "orientation": "landscape",
   "icons": [
     {
