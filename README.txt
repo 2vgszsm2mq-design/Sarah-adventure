@@ -1,1 +1,11 @@
-Sarah’s Adventure ❤️ – PWA v12\n\nForbedringer:\n- helt ny forside-layout\n- spil-laget skjules helt bag coveret\n- renere tekst og knapper\n- lidt højere gameplay\n
+
+Sarah's Adventure – Indie Game Project
+
+Indhold:
+- Engine (grundlæggende spil-motor)
+- 20 levels
+- Sudoku mellem hver bane
+- 3 boss figurer
+- Casino mini-game
+- Introfilm storyboard
+- Soundtrack placeholders

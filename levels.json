@@ -1,0 +1,122 @@
+[
+  {
+    "level": 1,
+    "name": "Level 1",
+    "theme": "Beach",
+    "sudoku_between": true
+  },
+  {
+    "level": 2,
+    "name": "Level 2",
+    "theme": "Beach",
+    "sudoku_between": true
+  },
+  {
+    "level": 3,
+    "name": "Level 3",
+    "theme": "Beach",
+    "sudoku_between": true
+  },
+  {
+    "level": 4,
+    "name": "Level 4",
+    "theme": "Beach",
+    "sudoku_between": true
+  },
+  {
+    "level": 5,
+    "name": "Level 5",
+    "theme": "Beach",
+    "sudoku_between": true
+  },
+  {
+    "level": 6,
+    "name": "Level 6",
+    "theme": "Beach",
+    "sudoku_between": true
+  },
+  {
+    "level": 7,
+    "name": "Level 7",
+    "theme": "Sunset",
+    "sudoku_between": true
+  },
+  {
+    "level": 8,
+    "name": "Level 8",
+    "theme": "Sunset",
+    "sudoku_between": true
+  },
+  {
+    "level": 9,
+    "name": "Level 9",
+    "theme": "Sunset",
+    "sudoku_between": true
+  },
+  {
+    "level": 10,
+    "name": "Level 10",
+    "theme": "Sunset",
+    "sudoku_between": true
+  },
+  {
+    "level": 11,
+    "name": "Level 11",
+    "theme": "Sunset",
+    "sudoku_between": true
+  },
+  {
+    "level": 12,
+    "name": "Level 12",
+    "theme": "Sunset",
+    "sudoku_between": true
+  },
+  {
+    "level": 13,
+    "name": "Level 13",
+    "theme": "Sunset",
+    "sudoku_between": true
+  },
+  {
+    "level": 14,
+    "name": "Level 14",
+    "theme": "Casino",
+    "sudoku_between": true
+  },
+  {
+    "level": 15,
+    "name": "Level 15",
+    "theme": "Casino",
+    "sudoku_between": true
+  },
+  {
+    "level": 16,
+    "name": "Level 16",
+    "theme": "Casino",
+    "sudoku_between": true
+  },
+  {
+    "level": 17,
+    "name": "Level 17",
+    "theme": "Casino",
+    "sudoku_between": true
+  },
+  {
+    "level": 18,
+    "name": "Level 18",
+    "theme": "Casino",
+    "sudoku_between": true
+  },
+  {
+    "level": 19,
+    "name": "Level 19",
+    "theme": "Casino",
+    "sudoku_between": true
+  },
+  {
+    "level": 20,
+    "name": "Level 20",
+    "theme": "Casino",
+    "sudoku_between": true
+  }
+]
