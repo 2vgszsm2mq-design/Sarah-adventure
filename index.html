@@ -2,7 +2,7 @@
 <html lang="da">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Sarah's Adventure ❤️</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -12,40 +12,48 @@
     <canvas id="game" width="1280" height="720"></canvas>
 
     <div id="hud">
-      <div id="topLeft">Mønter: <span id="coins">0</span> · Liv: <span id="lives">3</span> · 💌: <span id="letters">0</span>/1</div>
-      <div id="topRight">Niveau: <span id="levelName">Bane 1</span></div>
+      <div id="topLeft">🛡️ <span id="shield">3</span> · ❤️ Ammo <span id="ammo">3</span> · 🪙 <span id="coins">0</span> · 💌 <span id="letters">0</span>/1</div>
+      <div id="topRight">Niveau: <span id="levelName">Love Beach</span></div>
     </div>
 
-    <div id="menu" class="overlay visible">
-      <div class="panel title-panel">
-        <h1>Sarah’s Adventure ❤️</h1>
-        <p>En sød platformer på dansk med hemmelige rør, mønter, fjender og boss fight.</p>
-        <div class="btn-row">
-          <button id="newGameBtn">Nyt spil</button>
-          <button id="continueBtn">Fortsæt</button>
+    <div id="menu" class="overlay visible menu-bg">
+      <div class="panel title-panel glass">
+        <div class="subtitle">Til min prinsesse Sarah</div>
+        <div class="btn-col big-buttons">
+          <button id="newGameBtn">NYT SPIL</button>
+          <button id="continueBtn" class="alt">FORTSÆT</button>
+          <button id="settingsBtn" class="ghost">INDSTILLINGER</button>
         </div>
-        <p class="small">Gemmes automatisk på telefonen. Brug touch-knapper nederst.</p>
+        <p class="small">Love Beach · King Crab boss · pause · gem · touch controls</p>
+      </div>
+    </div>
+
+    <div id="intro" class="overlay intro-screen">
+      <div class="panel glass intro-panel">
+        <h1>Sarah’s Adventure ❤️</h1>
+        <p>Til min prinsesse Sarah</p>
+        <button id="skipIntroBtn">Spring over</button>
       </div>
     </div>
 
     <div id="pauseMenu" class="overlay">
-      <div class="panel">
+      <div class="panel glass">
         <h2>Pause</h2>
         <div class="btn-col">
           <button id="resumeBtn">Fortsæt spil</button>
           <button id="saveBtn">Gem nu</button>
-          <button id="quitBtn">Til hovedmenu</button>
+          <button id="quitBtn" class="ghost">Til hovedmenu</button>
         </div>
       </div>
     </div>
 
     <div id="endMenu" class="overlay">
-      <div class="panel">
+      <div class="panel glass">
         <h2 id="endTitle">Du vandt!</h2>
         <p id="endText"></p>
         <div class="btn-col">
           <button id="restartBtn">Spil igen</button>
-          <button id="endMenuBtn">Til hovedmenu</button>
+          <button id="endMenuBtn" class="ghost">Til hovedmenu</button>
         </div>
       </div>
     </div>
@@ -57,7 +65,7 @@
       </div>
       <div class="right-controls">
         <button class="control" data-action="jump">⤒ Hop</button>
-        <button class="control" data-action="attack">★ Slå</button>
+        <button class="control" data-action="attack">❤️ Skyd</button>
         <button class="control" data-action="pause">❚❚</button>
       </div>
     </div>

@@ -37,13 +37,17 @@ const world = {
 
 function checkOrientation() {
   const portrait = window.innerHeight > window.innerWidth;
-  document.body.classList.toggle('portrait-lock', portrait);
-  document.body.classList.toggle('landscape', !portrait);
+  document.body.classList.toggle('portrait-lock', false);
+  document.body.classList.toggle('landscape', true);
+  const notice = document.getElementById('rotateNotice');
+  if (notice) notice.classList.remove('visible');
+  // Keep the game visible at all times on iPhone/local preview.
+  // Rotation is only a recommendation, never a blocking state.
 }
 
-window.addEventListener('load', checkOrientation);
-window.addEventListener('resize', checkOrientation);
-window.addEventListener('orientationchange', () => setTimeout(checkOrientation, 120));
+window.addEventListener('load', () => setTimeout(checkOrientation, 50));
+window.addEventListener('resize', () => setTimeout(checkOrientation, 50));
+window.addEventListener('orientationchange', () => setTimeout(checkOrientation, 150));
 
 const player = {
   x: 140, y: 300, w: 70, h: 92, vx: 0, vy: 0, speed: 5.4, jumpPower: -15.5,
