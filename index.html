@@ -1,3 +1,68 @@
-<!doctype html><html lang="da"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sarah’s Adventure</title><body style="margin:0;font-family:Arial;background:#07192d;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh">
-<div style="text-align:center"><h1>Sarah’s Adventure ❤️</h1><p>App-pakken er klar til næste finjustering.</p></div></body></html>
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Sarah's Adventure ❤️</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="rotateNotice" class="hidden">Drej telefonen vandret for den bedste oplevelse 📱</div>
+  <div id="gameWrap">
+    <canvas id="game" width="1280" height="720"></canvas>
+
+    <div id="hud">
+      <div id="topLeft">Mønter: <span id="coins">0</span> · Liv: <span id="lives">3</span> · 💌: <span id="letters">0</span>/1</div>
+      <div id="topRight">Niveau: <span id="levelName">Bane 1</span></div>
+    </div>
+
+    <div id="menu" class="overlay visible">
+      <div class="panel title-panel">
+        <h1>Sarah’s Adventure ❤️</h1>
+        <p>En sød platformer på dansk med hemmelige rør, mønter, fjender og boss fight.</p>
+        <div class="btn-row">
+          <button id="newGameBtn">Nyt spil</button>
+          <button id="continueBtn">Fortsæt</button>
+        </div>
+        <p class="small">Gemmes automatisk på telefonen. Brug touch-knapper nederst.</p>
+      </div>
+    </div>
+
+    <div id="pauseMenu" class="overlay">
+      <div class="panel">
+        <h2>Pause</h2>
+        <div class="btn-col">
+          <button id="resumeBtn">Fortsæt spil</button>
+          <button id="saveBtn">Gem nu</button>
+          <button id="quitBtn">Til hovedmenu</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="endMenu" class="overlay">
+      <div class="panel">
+        <h2 id="endTitle">Du vandt!</h2>
+        <p id="endText"></p>
+        <div class="btn-col">
+          <button id="restartBtn">Spil igen</button>
+          <button id="endMenuBtn">Til hovedmenu</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="touchControls">
+      <div class="left-controls">
+        <button class="control" data-action="left">◀</button>
+        <button class="control" data-action="right">▶</button>
+      </div>
+      <div class="right-controls">
+        <button class="control" data-action="jump">⤒ Hop</button>
+        <button class="control" data-action="attack">★ Slå</button>
+        <button class="control" data-action="pause">❚❚</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
