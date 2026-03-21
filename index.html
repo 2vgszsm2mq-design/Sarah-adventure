@@ -3,44 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Sarah's Adventure ❤️ V4</title>
+  <title>Sarah's Adventure ❤️</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="rotateNotice" class="hidden">Drej telefonen vandret for den bedste oplevelse 📱</div>
   <div id="gameWrap">
     <canvas id="game" width="1280" height="720"></canvas>
 
     <div id="hud">
-      <div id="topLeft">
-        <span>🛡️ <strong id="shield">3</strong></span>
-        <span>❤️ Ammo <strong id="ammo">3</strong></span>
-        <span>🪙 <strong id="coins">0</strong></span>
-        <span>💌 <strong id="letters">0</strong>/1</span>
-      </div>
-      <div id="bossBarWrap" class="hidden">
-        <div id="bossName">KING CRAB 👑</div>
-        <div id="bossBar"><div id="bossBarFill"></div></div>
-      </div>
-      <div id="topRight">
-        <div>Niveau: <strong id="levelName">Love Beach</strong></div>
-        <div id="progressLabel">Fremdrift</div>
-        <div id="progressBar"><div id="progressFill"></div></div>
-      </div>
+      <div id="topLeft">🛡️ <span id="shield">3</span> · ❤️ Ammo <span id="ammo">3</span> · 🪙 <span id="coins">0</span> · 💌 <span id="letters">0</span>/1</div>
+      <div id="topRight">Niveau: <span id="levelName">Love Beach</span></div>
     </div>
 
-    <div id="comboFloat"></div>
-    <div id="bossIntro" class="center-banner hidden">KING CRAB 👑</div>
+    <div id="bossHud" class="hidden">
+      <div id="bossName">KING CRAB 👑</div>
+      <div id="bossBar"><div id="bossFill"></div></div>
+    </div>
+
+    <div id="comboFloat" class="hidden">x2 COMBO!</div>
 
     <div id="menu" class="overlay visible menu-bg">
-      <div class="panel glass title-panel">
+      <div class="panel title-panel glass">
         <div class="subtitle">Til min prinsesse Sarah</div>
-        <h1>Sarah’s Adventure ❤️</h1>
-        <p class="lede">Love Beach · hemmeligt rør · combo-system · Love Power · King Crab boss</p>
         <div class="btn-col big-buttons">
           <button id="newGameBtn">NYT SPIL</button>
           <button id="continueBtn" class="alt">FORTSÆT</button>
+          <button id="settingsBtn" class="ghost">INDSTILLINGER</button>
         </div>
-        <p class="small">Tip: Saml coins hurtigt for combo. Ved x5 får Sarah Love Power i kort tid.</p>
+        <p class="small">Love Beach · King Crab boss · pause · gem · touch controls</p>
+      </div>
+    </div>
+
+    <div id="intro" class="overlay intro-screen">
+      <div class="panel glass intro-panel">
+        <h1>Sarah’s Adventure ❤️</h1>
+        <p>Til min prinsesse Sarah</p>
+        <button id="skipIntroBtn">Spring over</button>
       </div>
     </div>
 
@@ -49,7 +48,7 @@
         <h2>Pause</h2>
         <div class="btn-col">
           <button id="resumeBtn">Fortsæt spil</button>
-          <button id="saveBtn" class="alt">Gem nu</button>
+          <button id="saveBtn">Gem nu</button>
           <button id="quitBtn" class="ghost">Til hovedmenu</button>
         </div>
       </div>
@@ -73,11 +72,12 @@
       </div>
       <div class="right-controls">
         <button class="control" data-action="jump">⤒ Hop</button>
-        <button class="control attack" data-action="attack">❤️ Skyd</button>
+        <button class="control" data-action="attack">❤️ Skyd</button>
         <button class="control" data-action="pause">❚❚</button>
       </div>
     </div>
   </div>
+
   <script src="game.js"></script>
 </body>
 </html>
