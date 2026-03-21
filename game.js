@@ -19,7 +19,7 @@ const ui = {
   comboFloat: document.getElementById('comboFloat'),
 };
 
-const SAVE_KEY = 'sarah_adventure_save_v2';
+const SAVE_KEY = 'sarah_adventure_save_v6';
 let gameState = 'menu';
 let keys = { left:false, right:false, jump:false, attack:false };
 let cameraX = 0;
@@ -104,6 +104,28 @@ function hideAllOverlays() {
   [ui.menu, ui.intro, ui.pauseMenu, ui.endMenu].forEach(el => el.classList.remove('visible'));
 }
 
+function closeMenuInstant() {
+  ui.menu.classList.remove('visible', 'leaving');
+  ui.menu.style.display = 'none';
+  ui.menu.style.opacity = '0';
+  ui.menu.style.pointerEvents = 'none';
+}
+
+function openMenu() {
+  ui.menu.style.display = 'flex';
+  ui.menu.style.opacity = '1';
+  ui.menu.style.pointerEvents = 'auto';
+  ui.menu.classList.remove('leaving');
+  ui.menu.classList.add('visible');
+}
+
+function closeIntroInstant() {
+  ui.intro.classList.remove('visible', 'leaving');
+  ui.intro.style.display = 'none';
+  ui.intro.style.opacity = '0';
+  ui.intro.style.pointerEvents = 'none';
+}
+
 function saveGame() {
   const save = {
     player: {
@@ -136,13 +158,19 @@ function loadGame() {
     world.enemies.forEach((e,i)=> e.alive = !!save.world.enemies[i]);
     if (save.world.boss) { world.boss.hp = save.world.boss.hp; world.boss.alive = save.world.boss.alive; }
     heartsShot = []; particles = [];
-    gameState = 'playing'; hideAllOverlays(); cameraX = Math.max(0, player.x - canvas.width * 0.22); ui.bossHud.classList.add('hidden');
+    gameState = 'playing'; hideAllOverlays(); closeMenuInstant(); closeIntroInstant(); cameraX = Math.max(0, player.x - canvas.width * 0.22); ui.bossHud.classList.add('hidden');
     return true;
   } catch (e) { console.error(e); return false; }
 }
 
+
 function beginIntro() {
   hideAllOverlays();
+  closeMenuInstant();
+  closeIntroInstant();
+  ui.intro.style.display = 'flex';
+  ui.intro.style.opacity = '1';
+  ui.intro.style.pointerEvents = 'auto';
   ui.intro.classList.remove('leaving');
   ui.intro.classList.add('visible');
   gameState = 'intro';
@@ -152,6 +180,8 @@ function startGameplay() {
   ui.intro.classList.add('leaving');
   setTimeout(() => {
     hideAllOverlays();
+    closeMenuInstant();
+    closeIntroInstant();
     gameState = 'playing';
     canvas.classList.add('fade-in');
     cameraX = Math.max(0, player.x - canvas.width * 0.22);
@@ -202,6 +232,7 @@ function setComboPopup() {
 }
 function showEnd(win, text) {
   gameState = 'end';
+  ui.pauseMenu.classList.remove('visible');
   ui.endTitle.textContent = win ? 'Du vandt! 🎉' : 'Game Over';
   ui.endText.textContent = text;
   ui.endMenu.classList.add('visible');
@@ -280,7 +311,7 @@ function update() {
     const b = world.boss;
     if (b && b.alive && h.x < b.x+b.w && h.x+h.w > b.x && h.y < b.y+b.h && h.y+h.h > b.y) {
       b.hp -= h.power; h.life = 0; b.x += h.vx > 0 ? 18 : -18;
-      if (b.hp <= 0) b.alive = false;
+      if (b.hp <= 0) { b.alive = false; particles.push({x:b.x+40,y:b.y+40,t:60,kind:'burst'}); setTimeout(()=>showEnd(true, `SEJR ❤️ Sarah klarede Love Beach med ${player.coins} mønter og ${player.letters} Love Note(s).`), 700); };
     }
   });
 
@@ -399,6 +430,9 @@ function drawWorld() {
     if (p.kind === 'coin') {
       ctx.fillStyle = `rgba(255,220,90,${p.t/18})`;
       ctx.beginPath(); ctx.arc(p.x + (18-p.t)*1.8, p.y - Math.sin((18-p.t)/2)*12, 7, 0, Math.PI*2); ctx.fill();
+    } else if (p.kind === 'burst') {
+      ctx.fillStyle = `rgba(255,130,200,${p.t/60})`;
+      for (let i=0;i<10;i++) { const a=i*Math.PI/5 + (60-p.t)*0.08; ctx.beginPath(); ctx.arc(p.x+Math.cos(a)*(60-p.t)*2, p.y+Math.sin(a)*(60-p.t)*2, 6, 0, Math.PI*2); ctx.fill(); }
     } else {
       ctx.fillStyle = `rgba(255,255,255,${p.t/22})`; ctx.beginPath(); ctx.arc(p.x,p.y,30-p.t,0,Math.PI*2); ctx.fill();
     }
@@ -472,18 +506,17 @@ document.querySelectorAll('.control').forEach(btn => {
 document.getElementById('newGameBtn').onclick = () => {
   ui.menu.classList.add('leaving');
   setTimeout(() => {
-    ui.menu.classList.remove('visible');
-    ui.menu.classList.remove('leaving');
+    closeMenuInstant();
     newGame();
   }, 320);
 };
-document.getElementById('continueBtn').onclick = () => { if (!loadGame()) newGame(); };
+document.getElementById('continueBtn').onclick = () => { closeMenuInstant(); if (!loadGame()) newGame(); };
 document.getElementById('settingsBtn').onclick = () => alert('Indstillinger kommer i næste version.');
 document.getElementById('skipIntroBtn').onclick = startGameplay;
 document.getElementById('resumeBtn').onclick = togglePause;
 document.getElementById('saveBtn').onclick = saveGame;
-document.getElementById('quitBtn').onclick = () => { saveGame(); gameState = 'menu'; hideAllOverlays(); ui.menu.classList.add('visible'); };
+document.getElementById('quitBtn').onclick = () => { saveGame(); gameState = 'menu'; hideAllOverlays(); openMenu(); };
 document.getElementById('restartBtn').onclick = newGame;
-document.getElementById('endMenuBtn').onclick = () => { gameState = 'menu'; hideAllOverlays(); ui.menu.classList.add('visible'); };
+document.getElementById('endMenuBtn').onclick = () => { gameState = 'menu'; hideAllOverlays(); openMenu(); };
 ui.continueBtn.style.display = localStorage.getItem(SAVE_KEY) ? 'inline-block' : 'none';
-resetWorld(); ui.menu.classList.add('visible'); checkOrientation(); loop();
+resetWorld(); openMenu(); checkOrientation(); loop();

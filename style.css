@@ -173,3 +173,10 @@ canvas.fade-in {
   .control { min-width: 84px; min-height: 60px; }
   #touchControls { padding: 8px 12px; }
 }
+
+#menu {opacity:1; pointer-events:auto;}
+#menu:not(.visible) {display:none !important; opacity:0; pointer-events:none;}
+#bossHud { width: min(72vw, 1040px); top: 14px;}
+#bossBar { height: 26px; border-width:3px; }
+.control { background: rgba(255,255,255,0.24); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.28); }
+#touchControls { padding: 12px 18px; }
