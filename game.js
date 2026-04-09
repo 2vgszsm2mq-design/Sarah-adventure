@@ -30,47 +30,14 @@ let combo = 0;
 let comboUntil = 0;
 let bossIntroUntil = 0;
 let introArmed = false;
-let screenShake = 0;
 
 const images = {
   run: [0,1,2,3,4].map(i => { const img = new Image(); img.src = `assets/run${i}.png`; return img; }),
   attack: (() => { const img = new Image(); img.src = 'assets/attack.png'; return img; })()
 };
 
-function burst(x, y, color='#ff7fb2', count=12, spread=7) {
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x, y,
-      t: 18 + Math.random() * 12,
-      kind: 'spark',
-      color,
-      vx: (Math.random() - 0.5) * spread,
-      vy: (Math.random() - 0.65) * spread
-    });
-  }
-}
-function palm(ctx, x, baseY, h, sway) {
-  ctx.save();
-  ctx.translate(x, baseY);
-  ctx.rotate(-0.16 + Math.sin((time + sway) / 60) * 0.02);
-  ctx.fillStyle = 'rgba(32,12,28,0.85)';
-  ctx.fillRect(-6, -h, 12, h);
-  ctx.fillStyle = 'rgba(18,14,24,0.92)';
-  for (let i = 0; i < 6; i++) {
-    ctx.save();
-    ctx.rotate(-1.1 + i * 0.38);
-    ctx.beginPath();
-    ctx.moveTo(0, -h);
-    ctx.quadraticCurveTo(60, -h - 10, 130, -h + 24);
-    ctx.quadraticCurveTo(70, -h + 22, 0, -h + 6);
-    ctx.fill();
-    ctx.restore();
-  }
-  ctx.restore();
-}
-
 const world = {
-  width: 4200, height: 720, gravity: 0.85, title: 'Love Beach',
+  width: 9200, height: 720, gravity: 0.85, title: 'Love Beach',
   platforms: [], pipes: [], coins: [], heartAmmo: [], letters: [], enemies: [], powerUps: [], boss: null
 };
 
@@ -96,34 +63,103 @@ const player = {
   powerTimer: 0
 };
 
+
 function resetWorld() {
   world.platforms = [
-    {x:0,y:590,w:950,h:130},{x:1030,y:590,w:620,h:130},{x:1760,y:590,w:740,h:130},
-    {x:2580,y:590,w:620,h:130},{x:3250,y:590,w:900,h:130},{x:450,y:470,w:120,h:20},
-    {x:720,y:410,w:120,h:20},{x:1180,y:490,w:120,h:20},{x:1460,y:430,w:120,h:20},
-    {x:1930,y:470,w:140,h:20},{x:2250,y:410,w:140,h:20},{x:2820,y:450,w:140,h:20},
-    {x:3000,y:370,w:140,h:20},{x:3480,y:460,w:150,h:20}
+    {x:0,y:590,w:980,h:130},
+    {x:1060,y:590,w:760,h:130},
+    {x:1910,y:590,w:720,h:130},
+    {x:2740,y:590,w:820,h:130},
+    {x:3670,y:590,w:680,h:130},
+    {x:4480,y:590,w:860,h:130},
+    {x:5480,y:590,w:720,h:130},
+    {x:6320,y:590,w:760,h:130},
+    {x:7190,y:590,w:740,h:130},
+    {x:8060,y:590,w:1140,h:130},
+
+    {x:360,y:480,w:120,h:20},
+    {x:640,y:420,w:120,h:20},
+    {x:910,y:360,w:120,h:20},
+
+    {x:1290,y:500,w:130,h:20},
+    {x:1550,y:440,w:130,h:20},
+
+    {x:2110,y:470,w:140,h:20},
+    {x:2400,y:410,w:140,h:20},
+
+    {x:3000,y:470,w:140,h:20},
+    {x:3260,y:400,w:140,h:20},
+
+    {x:3910,y:470,w:150,h:20},
+    {x:4230,y:410,w:150,h:20},
+
+    {x:4700,y:510,w:130,h:20},
+    {x:4980,y:440,w:130,h:20},
+    {x:5280,y:370,w:130,h:20},
+
+    {x:5750,y:470,w:140,h:20},
+    {x:6030,y:410,w:140,h:20},
+
+    {x:6550,y:500,w:130,h:20},
+    {x:6840,y:430,w:130,h:20},
+
+    {x:7390,y:470,w:140,h:20},
+    {x:7670,y:400,w:140,h:20},
+
+    {x:8330,y:500,w:160,h:20},
+    {x:8610,y:430,w:160,h:20}
   ];
+
   world.pipes = [
-    {x:880,y:500,w:90,h:90,secretTo: {x:2050,y:300}},
-    {x:3650,y:500,w:90,h:90,secretTo: null}
+    {x:930,y:500,w:90,h:90,secretTo: {x:2350,y:300}},
+    {x:5200,y:500,w:90,h:90,secretTo: {x:6760,y:300}},
+    {x:8730,y:500,w:90,h:90,secretTo: null}
   ];
-  world.coins = [300,360,420,480,540,760,820,1210,1270,1510,1950,2010,2070,2280,2340,2860,2920,3500,3560,3620]
-    .map((x,i)=>({x,y:i%2===0?350:520,r:11,collected:false}));
+
+  world.coins = [
+    240,300,360,420,480,540,600,700,780,
+    1180,1240,1300,1500,1580,1660,
+    2050,2120,2190,2260,2430,2500,
+    2920,3000,3080,3340,
+    3790,3870,3950,4030,4300,
+    4620,4680,4740,5000,5080,5160,5340,
+    5660,5740,5820,6100,
+    6490,6570,6650,6900,
+    7310,7390,7470,7720,
+    8240,8320,8400,8480,8560,8640
+  ].map((x,i)=>({x,y:i%3===0?350:(i%2===0?510:440),r:11,collected:false}));
+
   world.heartAmmo = [
-    {x:1490,y:390,w:24,h:24,collected:false},{x:3040,y:330,w:24,h:24,collected:false},{x:2120,y:360,w:24,h:24,collected:false}
+    {x:1580,y:400,w:24,h:24,collected:false},
+    {x:3270,y:360,w:24,h:24,collected:false},
+    {x:4990,y:400,w:24,h:24,collected:false},
+    {x:6850,y:390,w:24,h:24,collected:false}
   ];
+
   world.powerUps = [
-    {x:2390,y:375,r:16,collected:false}
+    {x:2410,y:375,r:16,collected:false},
+    {x:6035,y:375,r:16,collected:false}
   ];
-  world.letters = [{x:3380,y:420,w:26,h:26,collected:false}];
+
+  world.letters = [
+    {x:4220,y:380,w:26,h:26,collected:false},
+    {x:7660,y:370,w:26,h:26,collected:false}
+  ];
+
   world.enemies = [
-    {x:1120,y:550,w:48,h:38,min:1060,max:1540,vx:1.3,alive:true},
-    {x:1870,y:550,w:48,h:38,min:1800,max:2440,vx:1.4,alive:true},
-    {x:2780,y:550,w:48,h:38,min:2660,max:3140,vx:1.6,alive:true}
+    {x:1180,y:550,w:48,h:38,min:1080,max:1700,vx:1.3,alive:true},
+    {x:2150,y:550,w:48,h:38,min:1980,max:2560,vx:1.4,alive:true},
+    {x:3020,y:550,w:48,h:38,min:2870,max:3450,vx:1.5,alive:true},
+    {x:3880,y:550,w:48,h:38,min:3740,max:4300,vx:1.4,alive:true},
+    {x:4630,y:550,w:48,h:38,min:4520,max:5300,vx:1.6,alive:true},
+    {x:5660,y:550,w:48,h:38,min:5520,max:6150,vx:1.4,alive:true},
+    {x:6520,y:550,w:48,h:38,min:6380,max:7020,vx:1.6,alive:true},
+    {x:7360,y:550,w:48,h:38,min:7240,max:7840,vx:1.7,alive:true}
   ];
-  world.boss = {x:3920,y:500,w:100,h:90,hp:8,maxHp:8,alive:true,cooldown:0};
+
+  world.boss = {x:8850,y:500,w:120,h:100,hp:12,maxHp:12,alive:true,cooldown:0};
 }
+
 
 function resetPlayer(full=true) {
   Object.assign(player, {
@@ -245,8 +281,6 @@ function hurtPlayer(sourceX=player.x) {
   const lostCoins = Math.min(6, player.coins);
   player.coins -= lostCoins;
   for (let i = 0; i < lostCoins; i++) particles.push({x: player.x + 20 + i*4, y: player.y + 18, t: 18, kind:'coin'});
-  burst(player.x + player.w/2, player.y + player.h/2, '#ff8fbf', 14, 8);
-  screenShake = 8;
   if (player.lives <= 0) { showEnd(false, 'King Crab vandt denne gang. Prøv igen ❤️'); return; }
   saveGame();
 }
@@ -310,7 +344,9 @@ function update() {
   if (player.x > world.width - player.w) player.x = world.width - player.w;
 
   if (player.x > 1760) { player.checkpointX = 1820; player.checkpointY = 498; }
-  if (player.x > 3250) { player.checkpointX = 3300; player.checkpointY = 498; }
+  if (player.x > 4200) { player.checkpointX = 4280; player.checkpointY = 498; }
+  if (player.x > 6500) { player.checkpointX = 6580; player.checkpointY = 498; }
+  if (player.x > 8100) { player.checkpointX = 8200; player.checkpointY = 498; }
 
   world.coins.forEach(c => {
     if (!c.collected && Math.hypot((player.x+35)-c.x, (player.y+46)-c.y) < 34) { c.collected = true; player.coins += 1; combo = Math.min(combo + 1, 9); comboUntil = time + 120; setComboPopup(); particles.push({x:c.x,y:c.y,t:18,kind:'spark'}); if (combo >= 5) player.powerTimer = Math.max(player.powerTimer, 180); }
@@ -328,8 +364,8 @@ function update() {
   for (const pipe of world.pipes) {
     if (rectsOverlap(player, pipe) && keys.downLike) {
       if (pipe.secretTo) { player.x = pipe.secretTo.x; player.y = pipe.secretTo.y; }
-      else if (player.x > 3600 && !world.boss.alive && player.letters >= 1) {
-        showEnd(true, `Sarah klarede Love Beach med ${player.coins} mønter, ${player.lives} liv tilbage og fandt Love Note 💌`);
+      else if (player.x > 8600 && !world.boss.alive && player.letters >= 2) {
+        showEnd(true, `Sarah klarede Love Beach med ${player.coins} mønter, ${player.lives} liv tilbage og fandt 2 Love Notes 💌`);
       }
     }
   }
@@ -397,87 +433,18 @@ function update() {
 
 function drawBackground() {
   const sky = ctx.createLinearGradient(0,0,0,canvas.height);
-  sky.addColorStop(0,'#2b1446');
-  sky.addColorStop(0.22,'#562a83');
-  sky.addColorStop(0.55,'#8c4fc0');
-  sky.addColorStop(0.8,'#f2998f');
-  sky.addColorStop(1,'#ffd4a6');
-  ctx.fillStyle = sky;
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  // Sun + glow
-  const sunX = canvas.width * 0.79;
-  const sunY = canvas.height * 0.18;
-  const sunGlow = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 110);
-  sunGlow.addColorStop(0, 'rgba(255,241,184,0.95)');
-  sunGlow.addColorStop(0.35, 'rgba(255,214,122,0.45)');
-  sunGlow.addColorStop(1, 'rgba(255,214,122,0)');
-  ctx.fillStyle = sunGlow;
-  ctx.fillRect(sunX-120, sunY-120, 240, 240);
-
-  // Cloud layer
-  for (let i=0;i<16;i++) {
-    const x = ((i*290 - cameraX*0.22) % (canvas.width+400)) - 80;
-    const y = 86 + (i%5)*18;
-    ctx.fillStyle = 'rgba(255,255,255,0.18)';
-    ctx.beginPath();
-    ctx.arc(x, y, 34, 0, Math.PI*2);
-    ctx.arc(x+38, y+6, 26, 0, Math.PI*2);
-    ctx.arc(x-34, y+8, 24, 0, Math.PI*2);
-    ctx.fill();
+  sky.addColorStop(0,'#3a1d55'); sky.addColorStop(0.55,'#6f3aa8'); sky.addColorStop(1,'#f7a1b9');
+  ctx.fillStyle = sky; ctx.fillRect(0,0,canvas.width,canvas.height);
+  for (let i=0;i<20;i++) {
+    const x = ((i*260 - cameraX*0.35) % (canvas.width+300)) - 60;
+    ctx.fillStyle = 'rgba(255,255,255,0.22)';
+    ctx.beginPath(); ctx.arc(x,120+(i%5)*16,30+(i%3)*10,0,Math.PI*2); ctx.arc(x+34,126+(i%4)*12,24,0,Math.PI*2); ctx.arc(x-28,128,22,0,Math.PI*2); ctx.fill();
   }
-
-  // Distant islands
-  ctx.save();
-  ctx.translate(-(cameraX*0.10), 0);
-  for (let i=0;i<8;i++) {
-    const bx = i*330 - 80;
-    ctx.fillStyle = i%2 ? 'rgba(76,37,104,0.42)' : 'rgba(58,26,88,0.50)';
-    ctx.beginPath();
-    ctx.moveTo(bx, 560);
-    ctx.quadraticCurveTo(bx+80, 420, bx+190, 560);
-    ctx.closePath();
-    ctx.fill();
-  }
-  ctx.restore();
-
-  // Ocean band
-  const seaTop = 500;
-  const sea = ctx.createLinearGradient(0, seaTop, 0, canvas.height);
-  sea.addColorStop(0, 'rgba(255,188,205,0.65)');
-  sea.addColorStop(0.25, 'rgba(255,163,191,0.42)');
-  sea.addColorStop(1, 'rgba(96,49,123,0.18)');
-  ctx.fillStyle = sea;
-  ctx.fillRect(0, seaTop, canvas.width, 120);
-
-  // Light reflection on water
-  for (let i=0;i<18;i++) {
-    const w = 70 - i*2;
-    ctx.fillStyle = `rgba(255,245,210,${0.12 - i*0.004})`;
-    ctx.fillRect(sunX - w/2 + Math.sin((time+i)/18)*8, seaTop + i*7, w, 3);
-  }
-
-  // Foreground beach tint
-  const sand = ctx.createLinearGradient(0, 560, 0, canvas.height);
-  sand.addColorStop(0, '#e8c9a8');
-  sand.addColorStop(1, '#c89a63');
-  ctx.fillStyle = sand;
-  ctx.fillRect(0, 560, canvas.width, 180);
-
-  // Palm silhouettes
-  ctx.save();
-  ctx.translate(-(cameraX*0.16), 0);
-  palm(ctx, 120, 560, 180, 0);
-  palm(ctx, 980, 560, 150, 30);
-  palm(ctx, 1660, 560, 190, 60);
-  palm(ctx, 2580, 560, 170, 90);
-  palm(ctx, 3360, 560, 160, 120);
-  palm(ctx, 4040, 560, 185, 150);
-  ctx.restore();
-
-  if (bossIntroUntil > time) {
-    ctx.fillStyle='rgba(18,0,24,0.16)';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = '#f6b7ce'; ctx.fillRect(0, 520, canvas.width, 220);
+  if (bossIntroUntil > time) { ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.fillRect(0,0,canvas.width,canvas.height); }
+  for (let i=0;i<canvas.width;i+=50) {
+    ctx.fillStyle = i%100===0 ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)';
+    ctx.fillRect(i, 540, 26, 160);
   }
 }
 
@@ -495,24 +462,25 @@ function drawHeart(x, y, s, color) {
 function drawWorld() {
   ctx.save(); ctx.translate(-cameraX, 0);
   for (let i=0;i<8;i++) {
-    const bx = i*600; ctx.fillStyle = i%2 ? 'rgba(65,25,90,0.18)' : 'rgba(47,18,70,0.24)';
+    const bx = i*600; ctx.fillStyle = i%2 ? 'rgba(80,36,116,0.45)' : 'rgba(52,20,83,0.55)';
     ctx.beginPath(); ctx.moveTo(bx,590); ctx.lineTo(bx+180,340); ctx.lineTo(bx+380,590); ctx.closePath(); ctx.fill();
   }
   world.platforms.forEach(p => {
-    ctx.fillStyle = p.y > 560 ? '#cf9f67' : '#efcf98';
+    ctx.fillStyle = p.y > 560 ? '#d8b37c' : '#e8c998';
     ctx.fillRect(p.x,p.y,p.w,p.h);
-    ctx.fillStyle = p.y > 560 ? '#78d86e' : '#ffe0aa';
+    ctx.fillStyle = p.y > 560 ? '#7ed061' : '#ffd9a1';
     ctx.fillRect(p.x,p.y,p.w,18);
-    ctx.fillStyle = 'rgba(255,255,255,0.12)';
-    ctx.fillRect(p.x, p.y+18, p.w, 4);
   });
   world.pipes.forEach(pipe => {
     ctx.fillStyle = '#26a65b'; ctx.fillRect(pipe.x, pipe.y, pipe.w, pipe.h); ctx.fillRect(pipe.x-8, pipe.y-18, pipe.w+16, 22);
     ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.fillRect(pipe.x+16, pipe.y+10, 12, pipe.h-20);
   });
-  ctx.fillStyle = '#fff'; ctx.font = 'bold 20px Arial'; ctx.fillText('Hemmeligt rør ↓', 795, 470); ctx.fillText('Udgang →', 3600, 470);
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 20px Arial';
+  ctx.fillText('Hemmeligt rør ↓', 840, 470);
+  ctx.fillText('Secret warp ↓', 5110, 470);
+  ctx.fillText('Udgang →', 8680, 470);
 
-  world.coins.forEach(c => { if (!c.collected) { ctx.fillStyle = 'rgba(255,231,150,0.22)'; ctx.beginPath(); ctx.arc(c.x,c.y,c.r+9+Math.sin((time+c.x)/15)*1.5,0,Math.PI*2); ctx.fill(); ctx.fillStyle = '#ffd84d'; ctx.beginPath(); ctx.arc(c.x,c.y,c.r,0,Math.PI*2); ctx.fill(); ctx.fillStyle = '#fff3c2'; ctx.fillRect(c.x-3,c.y-8,6,16); } });
+  world.coins.forEach(c => { if (!c.collected) { ctx.fillStyle = '#ffd84d'; ctx.beginPath(); ctx.arc(c.x,c.y,c.r,0,Math.PI*2); ctx.fill(); ctx.fillStyle = '#ffefad'; ctx.fillRect(c.x-3,c.y-8,6,16); } });
   world.heartAmmo.forEach(h => { if (!h.collected) drawHeart(h.x+12,h.y+12,12,'#ff4d88'); });
   world.powerUps.forEach(p => { if (!p.collected) { drawHeart(p.x,p.y,18,'#ff7ec1'); ctx.strokeStyle='#fff7'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(p.x,p.y,24+Math.sin(time/10)*3,0,Math.PI*2); ctx.stroke(); } });
   world.letters.forEach(l => {
@@ -520,7 +488,7 @@ function drawWorld() {
   });
   world.enemies.forEach(e => {
     if (!e.alive) return;
-    ctx.fillStyle='rgba(255,100,100,0.18)'; ctx.beginPath(); ctx.arc(e.x+20,e.y+20,30+Math.sin((time+e.x)/10)*1.5,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#d33b3b'; ctx.beginPath(); ctx.arc(e.x+20,e.y+20,22,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#d33b3b'; ctx.beginPath(); ctx.arc(e.x+20,e.y+20,22,0,Math.PI*2); ctx.fill();
     ctx.fillRect(e.x-4,e.y+14,14,8); ctx.fillRect(e.x+30,e.y+14,14,8);
     ctx.fillStyle='#fff'; ctx.fillRect(e.x+8,e.y+8,8,8); ctx.fillRect(e.x+24,e.y+8,8,8);
   });
@@ -574,24 +542,13 @@ function drawPlayer() {
 }
 
 function drawHints() {
-  // Hidden in V7.1 to keep the screen clean and cinematic.
+  if (gameState !== 'playing' || time > 420) return;
+  ctx.fillStyle='rgba(0,0,0,0.26)'; ctx.fillRect(20, canvas.height-160, 420, 84);
+  ctx.fillStyle='#fff'; ctx.font='24px Arial'; ctx.fillText('Hop: ⤒   Skyd: ❤️   Pause: ❚❚', 36, canvas.height-116);
+  ctx.font='20px Arial'; ctx.fillText('Love Power gør dine hjerter større i kort tid.', 36, canvas.height-84);
 }
 
-function render() {
-  ctx.save();
-  if (screenShake > 0) {
-    const sx = (Math.random() - 0.5) * screenShake;
-    const sy = (Math.random() - 0.5) * screenShake * 0.6;
-    ctx.translate(sx, sy);
-    screenShake *= 0.84;
-    if (screenShake < 0.25) screenShake = 0;
-  }
-  drawBackground();
-  drawWorld();
-  drawHints();
-  ctx.restore();
-  requestAnimationFrame(loop);
-}
+function render() { drawBackground(); drawWorld(); drawHints(); requestAnimationFrame(loop); }
 function loop() { update(); render(); }
 
 function setAction(action, pressed) {

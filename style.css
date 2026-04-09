@@ -182,48 +182,16 @@ canvas.fade-in {
 #touchControls { padding: 12px 18px; }
 
 
-/* V7.1 realistic/cinematic polish */
-html, body {
-  background: #120716;
+/* V7.2 longer-world polish */
+.menu-bg {
+  background:
+    linear-gradient(rgba(12,4,18,0.18), rgba(12,4,18,0.48)),
+    url("assets/startscreen.jpg") no-repeat center center/cover;
 }
-#hud {
-  font-size: clamp(18px, 2.2vw, 22px);
-  letter-spacing: 0.2px;
-}
-#bossHud {
-  width: min(72vw, 760px);
-}
-#bossName {
-  font-size: clamp(24px, 3.4vw, 40px);
-  font-weight: 900;
-  letter-spacing: 1px;
-  text-shadow: 0 4px 18px rgba(0,0,0,.45);
+.panel {
+  backdrop-filter: blur(8px) saturate(118%);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.28);
 }
 #bossBar {
-  height: 34px !important;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.14) !important;
-  border: 2px solid rgba(255,255,255,0.34);
-  overflow: hidden;
-  box-shadow: 0 0 22px rgba(255,180,120,.25);
-}
-#bossFill {
-  background: linear-gradient(90deg, #ff5d73, #ff8d62, #ffb04d) !important;
-  box-shadow: 0 0 30px rgba(255,156,96,.45);
-}
-.control {
-  min-width: 86px;
-  min-height: 64px;
-  font-size: 1.05rem;
-  background: rgba(255,255,255,0.22) !important;
-  border: 1px solid rgba(255,255,255,0.24) !important;
-  backdrop-filter: blur(14px) saturate(140%);
-  box-shadow: 0 10px 28px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.18);
-  color: #fffafc;
-}
-.control:active {
-  transform: scale(0.97);
-}
-#comboFloat {
-  text-shadow: 0 0 18px rgba(255,110,175,.8), 0 2px 8px rgba(0,0,0,.45);
+  box-shadow: 0 0 28px rgba(255,154,112,0.32);
 }
