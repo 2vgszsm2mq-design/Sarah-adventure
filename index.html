@@ -1,23 +1,48 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sarah's Adventure ❤️</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Sarah's Adventure ❤️</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="menu" class="menu">
-  <div class="overlay">
-    <h1>Sarah's Adventure ❤️</h1>
-    <p>Til min prinsesse Sarah</p>
-    <button onclick="startGame()">NYT SPIL</button>
+  <div id="menu" class="screen menu-screen">
+    <div class="menu-panel">
+      <div class="eyebrow">Til min prinsesse Sarah</div>
+      <h1>Sarah's Adventure ❤️</h1>
+      <p class="tag">Love Beach · længere bane · boss · semi-open world</p>
+      <div class="menu-buttons">
+        <button id="newGameBtn">NYT SPIL</button>
+        <button id="continueBtn" class="secondary">FORTSÆT</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<canvas id="game"></canvas>
+  <canvas id="game" width="1280" height="720"></canvas>
 
-<script src="game.js"></script>
+  <div id="hud">
+    <div id="hudLeft">🛡️ <span id="shield">3</span> · ❤️ Ammo <span id="ammo">3</span> · 🪙 <span id="coins">0</span> · 💌 <span id="letters">0</span>/2</div>
+    <div id="hudRight">Niveau: Love Beach</div>
+  </div>
+
+  <div id="bossHud" class="hidden">
+    <div id="bossName">KING CRAB 👑</div>
+    <div id="bossBar"><div id="bossFill"></div></div>
+  </div>
+
+  <div id="touchControls">
+    <div class="left-controls">
+      <button class="control" data-action="left">◀</button>
+      <button class="control" data-action="right">▶</button>
+    </div>
+    <div class="right-controls">
+      <button class="control" data-action="jump">⤒ Hop</button>
+      <button class="control" data-action="attack">❤️ Skyd</button>
+      <button class="control" data-action="pause">❚❚</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
 </body>
 </html>
