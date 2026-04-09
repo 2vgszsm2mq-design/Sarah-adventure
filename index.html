@@ -1,51 +1,123 @@
+
 <!DOCTYPE html>
 <html lang="da">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Sarah's Adventure ❤️</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarah's Adventure ❤️</title>
+<style>
+body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(#5b2c83, #ff7eb3);
+    overflow:hidden;
+}
+#menu {
+    position:absolute;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    backdrop-filter: blur(6px);
+}
+h1 {
+    color:white;
+    font-size:40px;
+}
+button {
+    padding:15px 30px;
+    margin:10px;
+    font-size:20px;
+    border:none;
+    border-radius:10px;
+    background:#ff4da6;
+    color:white;
+}
+#game {
+    display:none;
+}
+canvas {
+    background: linear-gradient(#7a3cff, #ffb3c6);
+    display:block;
+}
+</style>
 </head>
+
 <body>
-  <div id="menu" class="menu-screen">
-    <div class="menu-overlay"></div>
-    <div class="menu-panel">
-      <div class="eyebrow">Til min prinsesse Sarah</div>
-      <h1>Sarah's Adventure ❤️</h1>
-      <div class="sub">Love Beach · længere bane · boss · semi-open world</div>
-      <div class="menu-buttons">
-        <button id="newGameBtn">NYT SPIL</button>
-        <button id="continueBtn" class="secondary">FORTSÆT</button>
-      </div>
-    </div>
-  </div>
 
-  <canvas id="game"></canvas>
+<div id="menu">
+    <h1>Sarah's Adventure ❤️</h1>
+    <p style="color:white;">Til min prinsesse Sarah</p>
+    <button onclick="startGame()">NYT SPIL</button>
+</div>
 
-  <div id="hud">
-    <div id="hudLeft">🛡️ <span id="shield">3</span> · ❤️ Ammo <span id="ammo">3</span> · 🪙 <span id="coins">0</span> · 💌 <span id="letters">0</span>/2</div>
-    <div id="hudRight">Niveau: Love Beach</div>
-  </div>
+<div id="game">
+<canvas id="c"></canvas>
+</div>
 
-  <div id="bossHud" class="hidden">
-    <div id="bossName">KING CRAB 👑</div>
-    <div id="bossBar"><div id="bossFill"></div></div>
-  </div>
+<script>
+let canvas = document.getElementById("c");
+let ctx = canvas.getContext("2d");
 
-  <div id="message" class="hidden"></div>
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-  <div id="touchControls">
-    <div class="left-controls">
-      <button class="control" data-action="left">◀</button>
-      <button class="control" data-action="right">▶</button>
-    </div>
-    <div class="right-controls">
-      <button class="control" data-action="jump">⤒ Hop</button>
-      <button class="control" data-action="attack">❤️ Skyd</button>
-      <button class="control" data-action="pause">❚❚</button>
-    </div>
-  </div>
+let player = {x:100, y:300, vx:0, vy:0, size:40};
+let gravity = 0.6;
+let ground = canvas.height - 100;
 
-  <script src="game.js"></script>
+let keys = {};
+
+document.addEventListener("keydown", e => keys[e.key]=true);
+document.addEventListener("keyup", e => keys[e.key]=false);
+
+function startGame(){
+    document.getElementById("menu").style.display="none";
+    document.getElementById("game").style.display="block";
+    loop();
+}
+
+function loop(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // background sun
+    ctx.beginPath();
+    ctx.arc(canvas.width-150,100,60,0,Math.PI*2);
+    ctx.fillStyle="rgba(255,255,200,0.5)";
+    ctx.fill();
+
+    // ground
+    ctx.fillStyle="#d2a679";
+    ctx.fillRect(0,ground,canvas.width,100);
+
+    // player (Sarah placeholder improved)
+    ctx.fillStyle="#ff4da6";
+    ctx.fillRect(player.x, player.y, player.size, player.size);
+
+    // physics
+    player.vy += gravity;
+    player.y += player.vy;
+
+    if(player.y > ground - player.size){
+        player.y = ground - player.size;
+        player.vy = 0;
+    }
+
+    if(keys["ArrowUp"]){
+        player.vy = -10;
+    }
+    if(keys["ArrowRight"]){
+        player.x += 5;
+    }
+    if(keys["ArrowLeft"]){
+        player.x -= 5;
+    }
+
+    requestAnimationFrame(loop);
+}
+</script>
+
 </body>
 </html>
