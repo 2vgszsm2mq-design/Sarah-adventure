@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sarah V3 Visual</title>
+<title>Sarah V4</title>
 <style>
-body{margin:0;overflow:hidden;background:#120824}
+body{margin:0;overflow:hidden;background:#120824;font-family:sans-serif}
 canvas{display:block}
 </style>
 </head>
@@ -13,55 +13,80 @@ canvas{display:block}
 <canvas id="c"></canvas>
 <script>
 const c=document.getElementById('c');
-const x=c.getContext('2d');
-function resize(){c.width=innerWidth;c.height=innerHeight}
-resize();onresize=resize;
+const ctx=c.getContext('2d');
 
-let t=0;
-let player={x:200,y:300,vx:0};
+function resize(){
+c.width=innerWidth;
+c.height=innerHeight;
+}
+resize();
+onresize=resize;
 
-function loop(){
-t+=0.016;
+let player={x:200,y:0,vy:0};
+let ground;
 
-// background glow
-let g=x.createLinearGradient(0,0,0,c.height);
-g.addColorStop(0,'#2d1748');
-g.addColorStop(1,'#f2a3b4');
-x.fillStyle=g;
-x.fillRect(0,0,c.width,c.height);
+function draw(){
+ground=c.height-140;
 
-// sun glow
-x.beginPath();
-x.arc(c.width*0.8,150,80,0,Math.PI*2);
-x.fillStyle="rgba(255,200,120,0.4)";
-x.fill();
+// SKY
+let g=ctx.createLinearGradient(0,0,0,c.height);
+g.addColorStop(0,'#2a1450');
+g.addColorStop(0.6,'#7a3db8');
+g.addColorStop(1,'#ffb3c1');
+ctx.fillStyle=g;
+ctx.fillRect(0,0,c.width,c.height);
 
-// ground
-x.fillStyle="#d7af79";
-x.fillRect(0,c.height-120,c.width,120);
+// SUN
+let sun=ctx.createRadialGradient(c.width*0.75,150,20,c.width*0.75,150,120);
+sun.addColorStop(0,'rgba(255,220,150,0.9)');
+sun.addColorStop(1,'rgba(255,220,150,0)');
+ctx.fillStyle=sun;
+ctx.fillRect(0,0,c.width,c.height);
 
-// PLAYER (BIG + GLOW)
-x.save();
-x.shadowColor="rgba(255,100,180,0.8)";
-x.shadowBlur=40;
-x.fillStyle="#ff69b4";
-x.fillRect(player.x, c.height-220, 120, 160);
-x.restore();
+// GROUND
+ctx.fillStyle="#d2a679";
+ctx.fillRect(0,ground,c.width,200);
+
+// SHADOW
+ctx.fillStyle="rgba(0,0,0,0.2)";
+ctx.beginPath();
+ctx.ellipse(player.x+60,ground+10,50,10,0,0,Math.PI*2);
+ctx.fill();
+
+// PLAYER
+ctx.save();
+ctx.shadowColor="rgba(255,120,180,0.9)";
+ctx.shadowBlur=40;
+ctx.fillStyle="#ff6fae";
+ctx.fillRect(player.x, ground-160, 120, 160);
+ctx.restore();
 
 // BOSS
-x.save();
-x.shadowColor="red";
-x.shadowBlur=30;
-x.fillStyle="#aa2222";
-x.fillRect(c.width-200, c.height-200, 140, 140);
-x.restore();
+ctx.save();
+ctx.shadowColor="red";
+ctx.shadowBlur=50;
+ctx.fillStyle="#b22222";
+ctx.beginPath();
+ctx.arc(c.width-180, ground-60, 60, 0, Math.PI*2);
+ctx.fill();
+ctx.restore();
 
-// boss hp bar
-x.fillStyle="#fff";
-x.fillRect(c.width-220,40,180,20);
-x.fillStyle="red";
-x.fillRect(c.width-220,40,140,20);
+// HP BAR
+ctx.fillStyle="#fff";
+ctx.fillRect(c.width-260,40,200,20);
+ctx.fillStyle="red";
+ctx.fillRect(c.width-260,40,150,20);
+}
 
+function update(){
+player.vy+=0.8;
+player.y+=player.vy;
+if(player.y>0){player.y=0;player.vy=0;}
+}
+
+function loop(){
+update();
+draw();
 requestAnimationFrame(loop);
 }
 loop();
