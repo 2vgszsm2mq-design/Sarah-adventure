@@ -3,20 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Sarah visible fix</title>
+<title>Sarah's Adventure ❤️ – V3 Pro</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1a0d2a;font-family:Arial,Helvetica,sans-serif}
 body{position:fixed;inset:0}
 #game{position:fixed;inset:0;width:100vw;height:100vh;display:block}
-#menu{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:linear-gradient(rgba(20,10,35,.25),rgba(20,10,35,.45)), linear-gradient(#2d1748,#f2a3b4)}
-.panel{width:min(88vw,760px);padding:28px 24px;border-radius:28px;text-align:center;color:#fff;background:rgba(27,13,44,.55);border:2px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)}
+#menu{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:
+linear-gradient(rgba(16,8,28,.22), rgba(16,8,28,.46)),
+linear-gradient(#2d1748,#f2a3b4)}
+.panel{width:min(88vw,820px);padding:28px 24px;border-radius:28px;text-align:center;color:#fff;background:rgba(27,13,44,.58);border:2px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)}
 h1{margin:0 0 12px;font-size:clamp(38px,6vw,74px)} .sub{margin:0 0 22px;font-size:clamp(18px,2vw,24px)}
-button{border:none;border-radius:18px;min-width:240px;padding:18px 24px;font-size:clamp(22px,2.4vw,30px);font-weight:800;color:white;background:linear-gradient(180deg,#ff90ca,#ff4ca5)}
+button{border:none;border-radius:18px;min-width:240px;padding:18px 24px;font-size:clamp(22px,2.4vw,30px);font-weight:800;color:white;background:linear-gradient(180deg,#ff90ca,#ff4ca5);box-shadow:0 12px 28px rgba(0,0,0,.24),0 0 22px rgba(255,77,166,.3)}
 .hidden{display:none!important}
 #hud{position:fixed;left:16px;right:16px;top:10px;z-index:11;display:flex;justify-content:space-between;color:white;font-weight:800;font-size:clamp(18px,2vw,22px);text-shadow:0 3px 10px rgba(0,0,0,.52);pointer-events:none}
+#bossHud{position:fixed;left:50%;top:16px;transform:translateX(-50%);width:min(74vw,680px);z-index:12;text-align:center;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.5);display:none}
+#bossName{font-size:clamp(24px,3vw,36px);font-weight:900;letter-spacing:.5px;margin-bottom:8px}
+#bossBar{height:22px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.28)}
+#bossFill{height:100%;width:100%;background:linear-gradient(90deg,#ff6178,#ff9d62,#ffc14f)}
 #controls{position:fixed;left:0;right:0;bottom:max(10px, env(safe-area-inset-bottom));z-index:12;display:flex;justify-content:space-between;padding:12px 16px;pointer-events:none}
 .group{display:flex;gap:12px}
-.control{pointer-events:auto;min-width:92px;min-height:66px;padding:12px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.28);color:white;font-weight:800;font-size:20px;background:rgba(255,255,255,.22);backdrop-filter:blur(10px)}
+.control{pointer-events:auto;min-width:92px;min-height:66px;padding:12px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.28);color:white;font-weight:800;font-size:20px;background:rgba(255,255,255,.22);backdrop-filter:blur(10px);box-shadow:0 12px 24px rgba(0,0,0,.18)}
 </style>
 </head>
 <body>
@@ -24,41 +30,55 @@ button{border:none;border-radius:18px;min-width:240px;padding:18px 24px;font-siz
   <div class="panel">
     <div style="font-size:clamp(22px,2.8vw,34px);margin-bottom:10px">Til min prinsesse Sarah</div>
     <h1>Sarah's Adventure ❤️</h1>
-    <div class="sub">Embedded sprite fix · Sarah skal være synlig nu</div>
+    <div class="sub">V3 Pro · bedre Sarah, boss og strandverden</div>
     <button id="startBtn">NYT SPIL</button>
   </div>
 </div>
 <canvas id="game"></canvas>
 <div id="hud" class="hidden"><div>❤️ <span id="lives">3</span> · 🪙 <span id="coins">0</span></div><div>Love Beach</div></div>
+<div id="bossHud"><div id="bossName">KING CRAB 👑</div><div id="bossBar"><div id="bossFill"></div></div></div>
 <div id="controls" class="hidden">
   <div class="group"><button class="control" data-act="left">◀</button><button class="control" data-act="right">▶</button></div>
   <div class="group"><button class="control" data-act="jump">⤒ Hop</button></div>
 </div>
+
 <script>
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 const menu = document.getElementById('menu');
 const hud = document.getElementById('hud');
+const bossHud = document.getElementById('bossHud');
+const bossFill = document.getElementById('bossFill');
 const controls = document.getElementById('controls');
 const livesEl = document.getElementById('lives');
 const coinsEl = document.getElementById('coins');
 
 const sprite = new Image();
-sprite.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAABgCAYAAADy8ayIAAAD1ElEQVR4nO3cMZrTRhgGYImH3ABuQJHcgJpia6otOAI1BWlSpEmK1DkCBRX1FtS5QSi4AdyAwmni50mMtWt5/tHM6H/f0vJK+sbi82jY1TQBAAAAAAAAAHsxR+7s7csfD5H7O/X7h0+h5xtNfvlr7r9G/pAd1g5+qrcLQX75tzxeZP4mBfDbH38ubvv5zeuL9tHTRSC//Gve31P+4p2sCX9f8FOXDEQPF4H88l/63h7zb1IAa4KfemggWl8E8sv/0Ht6zv+o5Ie3UDJ4eyC//DV1XwDTdP8gbL0A04L88i8pzT9EAUyTbwL55a9hmAIA4g1VAL4F5M+sRv6hCgCINVwB+BaQP7Po/MMVABBHAUBimxfA0+e3RdtHJ7/8JdujbV4AX/56X7R9dPLLX7I9mlsASEwBQGLVCyD6vy0u/XvpXsgvf6To/GYAkNjjWju+tPmePr/9/8LHtxfT9MPHs+8dqf3ll/8SrfMXzwBKH0jw3arnQvhaxy8lv/wlP986f7VbgOi2Gqn9p0l++cfIH1IASy0UddJL+2nd/kfyy3/u9RHyh80Aag1C7x/+kfzyn3u99/zhg3jfI4qinora24f/X/LLv7Stx/zVBvLagRj1gz8lv/xL23rKv9mAHv6eVj+8cP5pu/OrTX751/7MnvIDAD2pNsU4vHof/rz2+d3tMFMi+eWP3meN/P4WABJTAJBYlQKoMf2pud9o8ss/yn7NACAxBQCJKQBITAFAYuEFUHuhpveFIPlz5x+NGQAEGq0Awwrg5uYmdTPLL3/rc7hGWAHc3d0N82uaNcgvf+tzuEboLcBW92e93gfKnzv/iKwBQGLWAILIL/+IMyBrAEHkl7/1OVzDLQAkFlYAWy/M9LYQJH/u/KMyA4DEFAAEGHUGpAAgMQUAiYUUQKsFmV4WguTPnX9kZgCQmAKAxBQAFBr5FkgBQGLFBdB6IcbxHb/l8UdnBgCJKQBITAFAgda3IKXHLyqA1uGPRl6FjSB/H+cxIjMASOxx6xOAkc3vbod8EtCRGQAkpgAgsasLoLeFl1EfyBBF/r7OZxRmAJBY/UXAX5+cf/2Xr2XvHcHe8tS28/E6fP743SxlfvZiXnp9i3OqfpBz4abpfMA17x3B3vLUtvfx6rEA/DdgZ/b2j2BvefbGGgAkpgAgMQUAiSkASEwBQGIKABJTAJCYAoDEFAAk5jcBKzkcDot/nXbcNs+z34b7l/FqwwwAEqs6A1jT6r4B2LOl6/uh12tf824BKlFW6xivNhRAR/Y2C9pbnj2qWgBrPlwXAnvW6/VtERAAMvoH2XbVa1HAb4MAAAAASUVORK5CYII=";
+sprite.src = "data:image/png;base64,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";
+const bossSprite = new Image();
+bossSprite.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAAB4CAYAAAB1ovlvAAAFYklEQVR4nO2cu3LUSBSGz1AExJBYUEW85WACx04IsJN9g014kn0WPwSJcUCwGzuYYIqYKiMnOHY2G0CD3CuNpL7953T/X0IBltSXb/6+ySNCCCGEEEIIecJhd35AXl87z9AF0IyTJ1Si2OtbgAISKBRwAj+11qZY7PWtQAEJFAo4wlRaLU2x2OtbggLO8fd51OV/ffknUUHqZIMugDaWpNRm++9ku8Ve3xpMwAGlhlgOxb+hgAQKBfxJ6W0WpuAPKCCBQgEFd9TGFKSABEzz2wHfPv4BT6HXf35pth+YgAQKBSRQKCCBQgEJFApIoFBAAqXZ5b/P9clJ8e2Yy/v75tu/2QZACDdHi0I2VWGN0k3RioxNVNKSeD61i1ht5SxLN0WNMlZXoRrF86lJxGoq0oJ4PjWIWMU+YIvyidRRb9OfoBo6IBVW0xCegLvT0yCJKN9TQtsjtP1TAfvU+BXf7veLy7KmsfvNRrqDXVfXln9NEsb0QSqKPnDu0zbXACGf8n5zvIoa5MxRxjkRY/siFc9LPCRFzOcaco91fko55yRLzfXJySFmXuj6LLeI2W4eKt1YhRHyiZQVMFcSj0mYsm9iSX7DFGk3rChqsZF67oiciw4lTN0/sSS7UerV1Ha/3+SQ793Xr7M/8/nt29SPhT//8v5+k6OPYu8RNQfMuYTnNktacrTnsP9DZQwSEL13lIrtdvvk77vdrqnnpyR00bJYwJLS9Q8PpR7VFP3Dg3QvX2Z9xtpUnBWwdNpRvryUkNCxJBVnBXQX1zLsknIkSUD/ZjlFLJ1+6DkX6vm5U3DNPHD1IoSJSKYIWQkHb8OkFpFzv7KkTMGY/UA1G9EUsDyxAqbYiFZxFEf5cIRIqPIozmeNiBQQxxoBTbyM4LPkvTMeu+FYckac85WsYi+pjVXSVYwC4nBvyhzrn5wUfwV7d3p62O73vz51HH7xuGHY9UvJV/Mhv5TEPUSdIPoFOgSLMAE1MLUQMT8EL/lEUUA8S1bCuWTMclNuwdgCuRUDPwl59eJFqiKQQL4/PgZdp+IkJHbiSgHxhAroiBExehWM+G16oofY/k8qT0gaMgHxhCRgquBJug8YUqjY+CdxIOUTUfIyAlMQxxoBc0y3sp2EcG5YF6b2AX3m0pAJiGMuAXMHSZGz4LlKcB6IAS2fCOhtmLF/ZwqWZ0rAqt+GmaocU7AsGuQTAb2OxQWKTqr/it4x/CGZQ3F+/PRDBgL8W/KZhljQ7a+q810aMgXz4dIPLZ5DRSGGXHXdQUTkfdehi1Id2uQTKfQt+UQHmsRzwOeAU9z0PboIVfHm9ladfCKKBRShhKnQKp+IcgFFKGEsmuUTMSCgCCUMRbt8IkYEFKGEa7Egn4ixVbCTkFs001gRz2EmAYdYa+RSWGwXkwKK2GzsnFhtD7MCivxodKsNn4qbvjcrn4hxAR2WOyCGGhZmphYhx3AS3p2dVf/VbzWI56hGQEfNItYknqM6AR1OxKuuO1jetqlRuiFVzAHnuOl7cx3ZygKr2gQcYyihxlRsQTifpgQcMpTxQ99vEHPGFoXzaVZAj4s3t7eXY/9xd3Z2HXtzf/j/0PfuWRc///wU+wyr1CrgxfyPLGNKzCmuui5E2GTltYZlAZvttBHMJqmVOQhlC0e1lFoFpHD5UCWkNgEpXjlUiKhFQIqHAyoiWkCKpweIiMijOMqnC0h/NHEWTPRCAQkUpIAqVmHkF5D+QC9CHJwP4mh6FexDEcuhYgTSJqCDIuZDhXgOrQL6UMhwVAnnY0XAMSjl/1Et2xiWBTxGzXKak+wYtQq4Bg2yViUVIYQQQgghhBBCCCGEEKKG/wAlSn/EWpG/DQAAAABJRU5ErkJggg==";
 
 const keys = {left:false,right:false,jump:false};
-const state = {running:false,cameraX:0,time:0};
-const world = {width:3400,groundY:0,platforms:[],coins:[]};
-const player = {x:160,y:0,w:128,h:192,vx:0,vy:0,speed:5.5,jump:-15,onGround:false,lives:3,coins:0,facing:1};
+const state = {running:false,cameraX:0,time:0,shake:0};
+const world = {
+  width: 4200,
+  groundY: 0,
+  platforms: [],
+  coins: [],
+  enemies: [],
+  boss: {x: 3600, y: 0, w: 200, h: 150, hp: 12, maxHp: 12, alive: true}
+};
+const player = {x:160,y:0,w:150,h:210,vx:0,vy:0,speed:5.7,jump:-15.5,onGround:false,lives:3,coins:0,facing:1,invuln:0};
 
 function resizeCanvas(){
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   world.groundY = canvas.height - 120;
   if(!state.running) player.y = world.groundY - player.h;
+  world.boss.y = world.groundY - world.boss.h + 8;
 }
 window.addEventListener('resize', resizeCanvas);
-window.addEventListener('orientationchange', ()=>setTimeout(resizeCanvas, 50));
+window.addEventListener('orientationchange', ()=>setTimeout(resizeCanvas, 60));
 resizeCanvas();
 
 function buildWorld(){
@@ -67,17 +87,25 @@ function buildWorld(){
     {x:0,y:world.groundY,w:900,h:140},
     {x:980,y:world.groundY,w:900,h:140},
     {x:1960,y:world.groundY,w:980,h:140},
+    {x:3040,y:world.groundY,w:1160,h:140},
     {x:420,y:world.groundY-120,w:220,h:18},
     {x:860,y:world.groundY-220,w:220,h:18},
     {x:1500,y:world.groundY-120,w:220,h:18},
     {x:2300,y:world.groundY-120,w:220,h:18},
+    {x:2850,y:world.groundY-220,w:220,h:18},
   ];
   world.coins = [];
-  [220,320,420,520,620,780,920,1060,1160,1260,1400,1520,1660,1880,2020,2160,2300,2440].forEach((x,i)=> {
+  [220,320,420,520,620,780,920,1060,1160,1260,1400,1520,1660,1880,2020,2160,2300,2440,2620,2820,3020,3220,3420].forEach((x,i)=> {
     world.coins.push({x:x, y:i%3===0?world.groundY-250:(i%2===0?world.groundY-80:world.groundY-155), r:12, collected:false});
   });
-  player.x = 160; player.y = world.groundY - player.h; player.vx = 0; player.vy = 0; player.coins = 0; player.lives = 3; player.onGround = false;
-  state.cameraX = 0;
+  world.enemies = [
+    {x:1420,y:world.groundY-46,w:56,h:46,min:1300,max:1780,dir:1,alive:true},
+    {x:2360,y:world.groundY-46,w:56,h:46,min:2200,max:2600,dir:1,alive:true},
+    {x:3150,y:world.groundY-46,w:56,h:46,min:3000,max:3480,dir:1,alive:true},
+  ];
+  world.boss = {x: 3600, y: world.groundY - 142, w: 210, h: 150, hp: 12, maxHp: 12, alive: true, flash: 0};
+  player.x = 160; player.y = world.groundY - player.h; player.vx = 0; player.vy = 0; player.coins = 0; player.lives = 3; player.onGround = false; player.facing = 1; player.invuln = 0;
+  state.cameraX = 0; state.time = 0;
 }
 
 function startGame(){ buildWorld(); state.running = true; menu.classList.add('hidden'); hud.classList.remove('hidden'); controls.classList.remove('hidden'); }
@@ -107,19 +135,30 @@ window.addEventListener('keyup', e => {
   if(['ArrowUp','w','W',' '].includes(e.key)) keys.jump = false;
 });
 
+function hurt() {
+  if(player.invuln > 0) return;
+  player.lives = Math.max(1, player.lives - 1);
+  player.invuln = 50;
+  state.shake = 8;
+}
+
 function update(){
   if(!state.running) return;
   state.time++;
-  if(keys.left) { player.vx = -5.5; player.facing = -1; }
-  else if(keys.right) { player.vx = 5.5; player.facing = 1; }
+
+  if(keys.left) { player.vx = -5.7; player.facing = -1; }
+  else if(keys.right) { player.vx = 5.7; player.facing = 1; }
   else player.vx *= 0.75;
 
   if(keys.jump && player.onGround) {
     player.vy = player.jump; player.onGround = false; keys.jump = false;
   }
 
-  player.vy += 0.85; if(player.vy > 18) player.vy = 18;
-  player.x += player.vx; player.y += player.vy; player.onGround = false;
+  player.vy += 0.85;
+  if(player.vy > 18) player.vy = 18;
+  player.x += player.vx;
+  player.y += player.vy;
+  player.onGround = false;
 
   for(const p of world.platforms){
     if(overlap(player,p)) {
@@ -130,6 +169,39 @@ function update(){
     }
   }
 
+  for(const e of world.enemies){
+    if(!e.alive) continue;
+    e.x += e.dir * 1.6;
+    if(e.x < e.min || e.x > e.max) e.dir *= -1;
+    if(overlap(player,e)){
+      const stomp = player.vy > 2 && player.y + player.h - e.y < 30;
+      if(stomp) {
+        e.alive = false;
+        player.vy = -10;
+      } else {
+        hurt();
+      }
+    }
+  }
+
+  const b = world.boss;
+  if(b.alive) {
+    if(Math.abs(player.x - b.x) < 650) {
+      bossHud.style.display = 'block';
+      bossFill.style.width = (b.hp / b.maxHp * 100) + '%';
+    } else {
+      bossHud.style.display = 'none';
+    }
+    if(overlap(player,b)) hurt();
+    if(Math.abs(player.x - b.x) < 180 && player.vy === 0 && player.onGround) {
+      b.hp = Math.max(0, b.hp - 0.02);
+      state.shake = 2;
+      if(b.hp <= 0) b.alive = false;
+    }
+  } else {
+    bossHud.style.display = 'none';
+  }
+
   if(player.x < 0) player.x = 0;
   if(player.x > world.width - player.w) player.x = world.width - player.w;
   if(player.y > canvas.height + 200) {
@@ -137,39 +209,107 @@ function update(){
   }
 
   for(const c of world.coins){
-    if(!c.collected && Math.hypot(player.x + player.w/2 - c.x, player.y + player.h/2 - c.y) < 46){
+    if(!c.collected && Math.hypot(player.x + player.w/2 - c.x, player.y + player.h/2 - c.y) < 52){
       c.collected = true; player.coins += 1;
     }
   }
 
-  let target = player.x - canvas.width * 0.38;
+  if(player.invuln > 0) player.invuln--;
+
+  let target = player.x - canvas.width * 0.40;
   target = Math.max(0, Math.min(target, world.width - canvas.width));
-  state.cameraX += (target - state.cameraX) * 0.12;
+  state.cameraX += (target - state.cameraX) * 0.13;
 
   livesEl.textContent = player.lives;
   coinsEl.textContent = player.coins;
 }
 
+function drawPalm(x,baseY,h){
+  ctx.fillStyle = 'rgba(24,10,32,.92)';
+  ctx.fillRect(x-5, baseY-h, 10, h);
+  for(let i=0;i<6;i++){
+    ctx.save();
+    ctx.translate(x, baseY-h);
+    ctx.rotate(-1.05 + i*0.4);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.quadraticCurveTo(74,-16,136,22);
+    ctx.quadraticCurveTo(74,18,0,8);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
 function drawBackground(){
   const sky = ctx.createLinearGradient(0,0,0,canvas.height);
-  sky.addColorStop(0,'#2d1748'); sky.addColorStop(0.55,'#6c39a5'); sky.addColorStop(1,'#f2a3b4');
+  sky.addColorStop(0,'#2d1748'); sky.addColorStop(0.52,'#6c39a5'); sky.addColorStop(1,'#f2a3b4');
   ctx.fillStyle = sky; ctx.fillRect(0,0,canvas.width,canvas.height);
 
   const sunX = canvas.width * 0.78, sunY = 150;
-  const sun = ctx.createRadialGradient(sunX,sunY,10,sunX,sunY,100);
-  sun.addColorStop(0,'rgba(255,244,184,.94)'); sun.addColorStop(.35,'rgba(255,219,140,.44)'); sun.addColorStop(1,'rgba(255,219,140,0)');
-  ctx.fillStyle = sun; ctx.fillRect(sunX-110, sunY-110, 220, 220);
+  const sun = ctx.createRadialGradient(sunX,sunY,10,sunX,sunY,110);
+  sun.addColorStop(0,'rgba(255,244,184,.95)'); sun.addColorStop(.35,'rgba(255,219,140,.46)'); sun.addColorStop(1,'rgba(255,219,140,0)');
+  ctx.fillStyle = sun; ctx.fillRect(sunX-120, sunY-120, 240, 240);
 
-  ctx.fillStyle = 'rgba(255,209,224,.42)';
+  for(let i=0;i<9;i++){
+    const x = ((i*320 - state.cameraX*0.12) % (canvas.width+260)) - 120;
+    const y = 120 + (i%3)*28;
+    ctx.fillStyle = 'rgba(255,255,255,.16)';
+    ctx.beginPath();
+    ctx.arc(x,y,32,0,Math.PI*2); ctx.arc(x+38,y+8,24,0,Math.PI*2); ctx.arc(x-30,y+10,22,0,Math.PI*2);
+    ctx.fill();
+  }
+
+  ctx.save();
+  ctx.translate(-(state.cameraX*0.10),0);
+  for(let i=0;i<8;i++){
+    const bx = i*520 - 40;
+    ctx.fillStyle = i%2 ? 'rgba(80,34,112,.32)' : 'rgba(60,24,92,.40)';
+    ctx.beginPath();
+    ctx.moveTo(bx,canvas.height-160);
+    ctx.quadraticCurveTo(bx+130,canvas.height-360,bx+280,canvas.height-160);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+
+  ctx.fillStyle = 'rgba(255,209,224,.40)';
   ctx.fillRect(0, canvas.height - 190, canvas.width, 200);
+
+  // water strip
+  ctx.fillStyle = 'rgba(208,180,240,.44)';
+  ctx.fillRect(0, canvas.height - 190, canvas.width, 72);
 
   const sand = ctx.createLinearGradient(0, canvas.height - 160, 0, canvas.height);
   sand.addColorStop(0, '#e8c89d'); sand.addColorStop(1, '#c79a63');
   ctx.fillStyle = sand; ctx.fillRect(0, canvas.height - 160, canvas.width, 200);
+
+  ctx.save();
+  ctx.translate(-(state.cameraX*0.16),0);
+  [120,1180,2260,3340].forEach((x,i)=>drawPalm(x, canvas.height-160, i%2?170:190));
+  ctx.restore();
+}
+
+function drawEnemy(e){
+  ctx.save();
+  ctx.shadowColor = 'rgba(255,80,80,.35)';
+  ctx.shadowBlur = 18;
+  ctx.fillStyle='rgba(255,100,100,.18)';
+  ctx.beginPath(); ctx.arc(e.x+24,e.y+24,30,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#d33b3b';
+  ctx.beginPath(); ctx.arc(e.x+24,e.y+24,22,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff';
+  ctx.fillRect(e.x+10,e.y+10,8,8); ctx.fillRect(e.x+28,e.y+10,8,8);
+  ctx.restore();
 }
 
 function drawWorld(){
   ctx.save();
+  if(state.shake > 0) {
+    const sx = (Math.random()-0.5)*state.shake, sy=(Math.random()-0.5)*state.shake*0.6;
+    ctx.translate(sx, sy);
+    state.shake *= 0.86;
+    if(state.shake < 0.2) state.shake = 0;
+  }
   ctx.translate(-state.cameraX, 0);
 
   for(const p of world.platforms){
@@ -187,12 +327,23 @@ function drawWorld(){
     ctx.beginPath(); ctx.arc(c.x,c.y,c.r,0,Math.PI*2); ctx.fill();
   }
 
+  for(const e of world.enemies) if(e.alive) drawEnemy(e);
+
+  if(world.boss.alive) {
+    const b = world.boss;
+    ctx.save();
+    ctx.shadowColor = 'rgba(255,65,65,.42)';
+    ctx.shadowBlur = 28;
+    ctx.drawImage(bossSprite, b.x, b.y, b.w, b.h);
+    ctx.restore();
+  }
+
   drawSarah();
   ctx.restore();
 }
 
 function drawSarah(){
-  const frameW = 64, frameH = 96;
+  const frameW = 80, frameH = 112;
   let frame = 0;
   if(!player.onGround) frame = 3;
   else if(Math.abs(player.vx) > 0.8) frame = (Math.floor(state.time / 8) % 2) + 1;
@@ -206,7 +357,9 @@ function drawSarah(){
   }
   ctx.shadowColor = 'rgba(255,120,180,.24)';
   ctx.shadowBlur = 18;
-  ctx.drawImage(sprite, frame*frameW, 0, frameW, frameH, player.x, player.y, player.w, player.h);
+  if(!(player.invuln > 0 && Math.floor(player.invuln/4)%2===0)){
+    ctx.drawImage(sprite, frame*frameW, 0, frameW, frameH, player.x, player.y, player.w, player.h);
+  }
   ctx.restore();
 }
 
