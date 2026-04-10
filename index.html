@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Sarah's Adventure V5</title>
+<title>Sarah's Adventure</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1a0d2a;font-family:Arial,Helvetica,sans-serif}
-body{position:fixed;inset:0}
+body{position:fixed;inset:0;overscroll-behavior:none}
 #game{position:fixed;inset:0;width:100vw;height:100vh;display:block}
 #menu{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:linear-gradient(rgba(16,8,28,.22), rgba(16,8,28,.46)), linear-gradient(#2d1748,#f2a3b4)}
 .panel{width:min(88vw,820px);padding:28px 24px;border-radius:28px;text-align:center;color:#fff;background:rgba(27,13,44,.58);border:2px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)}
@@ -21,6 +21,7 @@ button{border:none;border-radius:18px;min-width:240px;padding:18px 24px;font-siz
 #controls{position:fixed;left:0;right:0;bottom:max(10px, env(safe-area-inset-bottom));z-index:12;display:flex;justify-content:space-between;padding:12px 16px;pointer-events:none}
 .group{display:flex;gap:12px}
 .control{pointer-events:auto;min-width:92px;min-height:66px;padding:12px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.28);color:white;font-weight:800;font-size:20px;background:rgba(255,255,255,.22);backdrop-filter:blur(10px);box-shadow:0 12px 24px rgba(0,0,0,.18)}
+.small{font-size:15px;opacity:.9;margin-top:10px}
 </style>
 </head>
 <body>
@@ -28,8 +29,9 @@ button{border:none;border-radius:18px;min-width:240px;padding:18px 24px;font-siz
   <div class="panel">
     <div style="font-size:clamp(22px,2.8vw,34px);margin-bottom:10px">Til min prinsesse Sarah</div>
     <h1>Sarah's Adventure ❤️</h1>
-    <div class="sub">V5 · rigtigt løft</div>
+    <div class="sub">Host-klar webversion · Love Beach vertical slice</div>
     <button id="startBtn">NYT SPIL</button>
+    <div class="small">Tip: bedste test er som hostet webside i Safari</div>
   </div>
 </div>
 <canvas id="game"></canvas>
@@ -39,7 +41,6 @@ button{border:none;border-radius:18px;min-width:240px;padding:18px 24px;font-siz
   <div class="group"><button class="control" data-act="left">◀</button><button class="control" data-act="right">▶</button></div>
   <div class="group"><button class="control" data-act="jump">⤒ Hop</button></div>
 </div>
-
 <script>
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -57,12 +58,8 @@ const bossSprite = new Image(); bossSprite.src = "data:image/png;base64,iVBORw0K
 const keys = {left:false,right:false,jump:false};
 const state = {running:false,cameraX:0,time:0,shake:0,landFX:[],coinFX:[],hitStop:0};
 const world = {
-  width: 5200,
-  groundY: 0,
-  platforms: [],
-  coins: [],
-  enemies: [],
-  boss: {x: 4350, y: 0, w: 240, h: 170, hp: 18, maxHp: 18, alive: true, t:0, dir:1}
+  width: 5200, groundY: 0, platforms: [], coins: [], enemies: [],
+  boss: {x: 4350, y: 0, w: 250, h: 176, hp: 18, maxHp: 18, alive: true, t:0, dir:1}
 };
 const player = {
   x:160,y:0,w:176,h:236,vx:0,vy:0,speed:6.2,jump:-16.2,onGround:false,
@@ -70,8 +67,8 @@ const player = {
 };
 
 function resizeCanvas(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = Math.max(1, window.innerWidth);
+  canvas.height = Math.max(1, window.innerHeight);
   world.groundY = canvas.height - 120;
   if(!state.running) player.y = world.groundY - player.h;
   world.boss.y = world.groundY - world.boss.h + 8;
@@ -110,7 +107,13 @@ function buildWorld(){
   state.cameraX = 0; state.time = 0; state.shake = 0; state.landFX = []; state.coinFX = []; state.hitStop = 0;
 }
 
-function startGame(){ buildWorld(); state.running = true; menu.classList.add('hidden'); hud.classList.remove('hidden'); controls.classList.remove('hidden'); }
+function startGame(){
+  buildWorld();
+  state.running = true;
+  menu.classList.add('hidden');
+  hud.classList.remove('hidden');
+  controls.classList.remove('hidden');
+}
 document.getElementById('startBtn').addEventListener('click', startGame);
 
 function overlap(a,b){ return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y; }
@@ -174,7 +177,6 @@ function update(){
     player.squash = 0.9;
   }
 
-  // jump arc feel
   player.vy += player.vy < 0 ? 0.72 : 0.98;
   if(player.vy > 19) player.vy = 19;
 
@@ -221,7 +223,6 @@ function update(){
   const b = world.boss;
   if(b.alive) {
     b.t += 0.05;
-    // hover patrol
     b.x += Math.sin(b.t) * 0.6 * b.dir;
     if(Math.abs(player.x - b.x) < 760) {
       bossHud.style.display = 'block';
@@ -231,7 +232,6 @@ function update(){
     }
     if(overlap(player,b)) hurt();
 
-    // stomp boss from above to damage
     const stompBoss = player.vy > 2 && overlap(player,b) && (player.y + player.h - b.y < 42);
     if(stompBoss){
       b.hp = Math.max(0, b.hp - 1);
@@ -340,7 +340,6 @@ function drawEnemy(e){
   ctx.save();
   ctx.shadowColor = 'rgba(255,80,80,.35)';
   ctx.shadowBlur = 18;
-  // simple crab-like enemy
   ctx.fillStyle='#d33b3b';
   ctx.beginPath(); ctx.arc(e.x+28,e.y+28,22,0,Math.PI*2); ctx.fill();
   ctx.fillRect(e.x+6,e.y+18,12,6); ctx.fillRect(e.x+38,e.y+18,12,6);
@@ -428,7 +427,12 @@ function drawSarah(){
   ctx.restore();
 }
 
-function loop(){ update(); drawBackground(); if(state.running) drawWorld(); requestAnimationFrame(loop); }
+function loop(){
+  update();
+  drawBackground();
+  if(state.running) drawWorld();
+  requestAnimationFrame(loop);
+}
 loop();
 </script>
 </body>
