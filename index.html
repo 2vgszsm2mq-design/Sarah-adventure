@@ -2,38 +2,69 @@
 <html lang="da">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Sarah's Adventure ❤️</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sarah V3 Visual</title>
+<style>
+body{margin:0;overflow:hidden;background:#120824}
+canvas{display:block}
+</style>
 </head>
 <body>
-<div id="menu">
-  <div class="menu-bg"></div>
-  <div class="panel">
-    <div class="eyebrow">Til min prinsesse Sarah</div>
-    <h1>Sarah's Adventure ❤️</h1>
-    <div class="sub">Love Beach · bedre base · Sarah synlig · boss zone</div>
-    <button id="startBtn">NYT SPIL</button>
-  </div>
-</div>
+<canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c');
+const x=c.getContext('2d');
+function resize(){c.width=innerWidth;c.height=innerHeight}
+resize();onresize=resize;
 
-<canvas id="game"></canvas>
+let t=0;
+let player={x:200,y:300,vx:0};
 
-<div id="hud" class="hidden">
-  <div>❤️ <span id="lives">3</span> · 🪙 <span id="coins">0</span></div>
-  <div>Love Beach</div>
-</div>
+function loop(){
+t+=0.016;
 
-<div id="controls" class="hidden">
-  <div class="left">
-    <button class="control" data-act="left">◀</button>
-    <button class="control" data-act="right">▶</button>
-  </div>
-  <div class="right">
-    <button class="control" data-act="jump">⤒ Hop</button>
-  </div>
-</div>
+// background glow
+let g=x.createLinearGradient(0,0,0,c.height);
+g.addColorStop(0,'#2d1748');
+g.addColorStop(1,'#f2a3b4');
+x.fillStyle=g;
+x.fillRect(0,0,c.width,c.height);
 
-<script src="game.js"></script>
+// sun glow
+x.beginPath();
+x.arc(c.width*0.8,150,80,0,Math.PI*2);
+x.fillStyle="rgba(255,200,120,0.4)";
+x.fill();
+
+// ground
+x.fillStyle="#d7af79";
+x.fillRect(0,c.height-120,c.width,120);
+
+// PLAYER (BIG + GLOW)
+x.save();
+x.shadowColor="rgba(255,100,180,0.8)";
+x.shadowBlur=40;
+x.fillStyle="#ff69b4";
+x.fillRect(player.x, c.height-220, 120, 160);
+x.restore();
+
+// BOSS
+x.save();
+x.shadowColor="red";
+x.shadowBlur=30;
+x.fillStyle="#aa2222";
+x.fillRect(c.width-200, c.height-200, 140, 140);
+x.restore();
+
+// boss hp bar
+x.fillStyle="#fff";
+x.fillRect(c.width-220,40,180,20);
+x.fillStyle="red";
+x.fillRect(c.width-220,40,140,20);
+
+requestAnimationFrame(loop);
+}
+loop();
+</script>
 </body>
 </html>
