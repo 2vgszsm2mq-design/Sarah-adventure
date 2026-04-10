@@ -12,6 +12,9 @@ const state = {running:false,cameraX:0};
 const playerImg = new Image();
 playerImg.src = 'assets/sarah.png';
 
+const world = {width:3600,groundY:0,platforms:[],coins:[]};
+const player = {x:160,y:0,w:116,h:152,vx:0,vy:0,speed:5.5,jump:-15,onGround:false,lives:3,coins:0};
+
 function resizeCanvas(){
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -23,9 +26,6 @@ function resizeCanvas(){
 window.addEventListener('resize', resizeCanvas);
 window.addEventListener('orientationchange', ()=>setTimeout(resizeCanvas,50));
 resizeCanvas();
-
-const world = {width:3600,groundY:canvas.height-120,platforms:[],coins:[]};
-const player = {x:160,y:0,w:116,h:152,vx:0,vy:0,speed:5.5,jump:-15,onGround:false,lives:3,coins:0};
 
 function buildWorld(){
   world.groundY = canvas.height - 120;
@@ -92,8 +92,8 @@ function update(){
   if(!state.running) return;
   world.groundY = canvas.height - 120;
 
-  if(keys.left) player.vx = -player.speed;
-  else if(keys.right) player.vx = player.speed;
+  if(keys.left) player.vx = -5.5;
+  else if(keys.right) player.vx = 5.5;
   else player.vx *= 0.75;
 
   if(keys.jump && player.onGround){
@@ -184,13 +184,9 @@ function drawWorld(){
   for(const c of world.coins){
     if(c.collected) continue;
     ctx.fillStyle = 'rgba(255,231,150,.22)';
-    ctx.beginPath();
-    ctx.arc(c.x,c.y,c.r+9,0,Math.PI*2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(c.x,c.y,c.r+9,0,Math.PI*2); ctx.fill();
     ctx.fillStyle = '#ffd84d';
-    ctx.beginPath();
-    ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(c.x,c.y,c.r,0,Math.PI*2); ctx.fill();
   }
 
   drawSarah();
@@ -214,7 +210,7 @@ function drawSarah(){
 function loop(){
   update();
   drawBackground();
-  drawWorld();
+  if(state.running) drawWorld();
   requestAnimationFrame(loop);
 }
 loop();
