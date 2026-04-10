@@ -1,75 +1,50 @@
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{
-  margin:0;width:100%;height:100%;overflow:hidden;background:#180c25;font-family:Arial,Helvetica,sans-serif;
+  margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#190c2a;font-family:Arial,Helvetica,sans-serif;
 }
-body{position:fixed;inset:0;}
-canvas{
-  position:fixed;inset:0;width:100vw;height:100vh;display:block;background:#25153d;
+body{position:fixed;inset:0}
+#game{
+  position:fixed;inset:0;width:100vw;height:100vh;display:block;background:#2d1748;
 }
 .hidden{display:none!important}
-
-.menu-screen{
-  position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;
-  background:url('assets/cover.jpg') center center / cover no-repeat;
+#menu{
+  position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
 }
-.menu-overlay{
+.menu-bg{
   position:absolute;inset:0;
-  background:linear-gradient(rgba(10,6,18,.14), rgba(10,6,18,.38));
+  background:
+    linear-gradient(rgba(12,6,24,.20), rgba(12,6,24,.42)),
+    url('assets/cover.jpg') center center / cover no-repeat;
 }
-.menu-panel{
+.panel{
   position:relative;
-  width:min(90vw,820px);
-  padding:32px 28px 28px;
-  border-radius:30px;
-  background:rgba(28,14,45,.56);
-  border:2px solid rgba(255,255,255,.14);
-  backdrop-filter:blur(10px) saturate(130%);
-  box-shadow:0 26px 80px rgba(0,0,0,.34);
-  color:#fff;
+  width:min(88vw,760px);
+  padding:28px 24px;
+  border-radius:28px;
   text-align:center;
+  color:white;
+  background:rgba(27,13,44,.50);
+  border:2px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(10px) saturate(120%);
+  box-shadow:0 24px 70px rgba(0,0,0,.32);
 }
-.eyebrow{font-size:clamp(22px,2.8vw,34px);margin-bottom:10px;color:#fff3fb}
-h1{margin:0;font-size:clamp(40px,6vw,78px);line-height:1.02;text-shadow:0 8px 24px rgba(0,0,0,.3)}
-.sub{margin-top:16px;font-size:clamp(18px,2vw,26px);opacity:.96}
-.menu-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
-button{
-  border:none;border-radius:18px;min-width:240px;padding:17px 24px;font-size:clamp(22px,2.4vw,30px);font-weight:800;color:#fff;
+.eyebrow{font-size:clamp(22px,2.8vw,34px);margin-bottom:10px}
+h1{margin:0 0 22px;font-size:clamp(38px,6vw,74px);line-height:1.02}
+#startBtn{
+  border:none;border-radius:18px;min-width:240px;padding:18px 24px;
+  font-size:clamp(22px,2.4vw,30px);font-weight:800;color:white;
   background:linear-gradient(180deg,#ff90ca,#ff4ca5);
-  box-shadow:0 12px 28px rgba(0,0,0,.24),0 0 22px rgba(255,77,166,.28);
 }
-button.secondary{background:linear-gradient(180deg,#8d9fff,#5869ff)}
-button:active{transform:scale(.985)}
-
 #hud{
-  position:fixed;left:16px;right:16px;top:10px;z-index:10;
-  display:flex;justify-content:space-between;gap:20px;color:#fff;font-weight:800;
-  font-size:clamp(18px,2.2vw,22px);text-shadow:0 3px 10px rgba(0,0,0,.52);pointer-events:none;
+  position:fixed;left:16px;right:16px;top:10px;z-index:10;display:flex;justify-content:space-between;
+  color:white;font-weight:800;font-size:clamp(18px,2vw,22px);text-shadow:0 3px 10px rgba(0,0,0,.52);pointer-events:none;
 }
-#bossHud{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);width:min(74vw,980px);z-index:12;
-  text-align:center;color:#fff;text-shadow:0 3px 10px rgba(0,0,0,.5);pointer-events:none;
-}
-#bossName{font-size:clamp(28px,3.6vw,44px);font-weight:900;letter-spacing:1px;margin-bottom:10px}
-#bossBar{
-  height:28px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.18);
-  border:3px solid rgba(255,255,255,.32);box-shadow:0 0 32px rgba(255,165,110,.28), inset 0 0 12px rgba(255,255,255,.12);
-}
-#bossFill{height:100%;width:100%;background:linear-gradient(90deg,#ff5d72,#ff9e61,#ffb34d)}
-
-#message{
-  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:20;
-  padding:18px 24px;border-radius:24px;color:#fff;font-weight:900;font-size:clamp(28px,4vw,52px);
-  background:rgba(31,15,48,.64);border:2px solid rgba(255,255,255,.16);backdrop-filter:blur(8px);
-  box-shadow:0 16px 40px rgba(0,0,0,.28);
-}
-
-#touchControls{
-  position:fixed;left:0;right:0;bottom:max(8px, env(safe-area-inset-bottom));z-index:15;
+#controls{
+  position:fixed;left:0;right:0;bottom:max(10px, env(safe-area-inset-bottom));z-index:12;
   display:flex;justify-content:space-between;padding:12px 16px;pointer-events:none;
 }
-.left-controls,.right-controls{display:flex;gap:12px}
+.left,.right{display:flex;gap:12px}
 .control{
-  pointer-events:auto;min-width:92px;min-height:66px;padding:12px 14px;
-  background:rgba(255,255,255,.24)!important;border:1px solid rgba(255,255,255,.28)!important;
-  backdrop-filter:blur(10px) saturate(120%);box-shadow:0 12px 24px rgba(0,0,0,.18);
+  pointer-events:auto;min-width:92px;min-height:66px;padding:12px 14px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.28);color:white;font-weight:800;font-size:20px;
+  background:rgba(255,255,255,.22);backdrop-filter:blur(10px) saturate(120%);
 }

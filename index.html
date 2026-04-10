@@ -2,76 +2,37 @@
 <html lang="da">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>Sarah's Adventure ❤️</title>
-<style>
-body { margin:0; font-family: Arial; background:#2d1b4e; color:white; }
-#menu { position:absolute; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(#5b2a86,#2d1b4e); }
-button { padding:20px 40px; font-size:20px; border:none; border-radius:12px; background:#ff4fa3; color:white; }
-#game { display:none; }
-canvas { background:linear-gradient(#6a3fb5,#f0a0c0); display:block; margin:0 auto; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div id="menu">
-<h1>Sarah's Adventure ❤️</h1>
-<p>Til min prinsesse Sarah</p>
-<button onclick="startGame()">NYT SPIL</button>
+  <div class="menu-bg"></div>
+  <div class="panel">
+    <div class="eyebrow">Til min prinsesse Sarah</div>
+    <h1>Sarah's Adventure ❤️</h1>
+    <button id="startBtn">NYT SPIL</button>
+  </div>
 </div>
 
-<div id="game">
-<canvas id="c" width="400" height="700"></canvas>
+<canvas id="game"></canvas>
+
+<div id="hud" class="hidden">
+  <div>❤️ <span id="lives">3</span> · 🪙 <span id="coins">0</span></div>
+  <div>Love Beach</div>
 </div>
 
-<script>
-const canvas = document.getElementById("c");
-const ctx = canvas.getContext("2d");
+<div id="controls" class="hidden">
+  <div class="left">
+    <button class="control" data-act="left">◀</button>
+    <button class="control" data-act="right">▶</button>
+  </div>
+  <div class="right">
+    <button class="control" data-act="jump">⤒ Hop</button>
+  </div>
+</div>
 
-let x = 50;
-let y = 600;
-let vy = 0;
-let gravity = 0.5;
-let onGround = false;
-
-function startGame(){
- document.getElementById("menu").style.display="none";
- document.getElementById("game").style.display="block";
- loop();
-}
-
-function loop(){
- ctx.clearRect(0,0,400,700);
-
- // ground
- ctx.fillStyle="#3cb371";
- ctx.fillRect(0,650,400,50);
-
- // Sarah (placeholder)
- ctx.fillStyle="#ff69b4";
- ctx.fillRect(x,y,40,60);
-
- // gravity
- vy += gravity;
- y += vy;
-
- if(y > 590){
-  y = 590;
-  vy = 0;
-  onGround = true;
- } else {
-  onGround = false;
- }
-
- requestAnimationFrame(loop);
-}
-
-document.addEventListener("keydown", e=>{
- if(e.code==="Space" && onGround){
-  vy = -10;
- }
-});
-</script>
-
+<script src="game.js"></script>
 </body>
 </html>
