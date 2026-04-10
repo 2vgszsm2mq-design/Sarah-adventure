@@ -12,7 +12,7 @@ body{position:fixed;inset:0}
 .menu-bg{
   position:absolute;inset:0;
   background:
-    linear-gradient(rgba(12,6,24,.28), rgba(12,6,24,.46)),
+    linear-gradient(rgba(12,6,24,.25), rgba(12,6,24,.44)),
     url('assets/cover.jpg') center center / cover no-repeat;
 }
 .panel{

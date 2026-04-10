@@ -1,95 +1,39 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sarah V4</title>
-<style>
-body{margin:0;overflow:hidden;background:#120824;font-family:sans-serif}
-canvas{display:block}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Sarah's Adventure ❤️</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<canvas id="c"></canvas>
-<script>
-const c=document.getElementById('c');
-const ctx=c.getContext('2d');
+  <div id="menu">
+    <div class="menu-bg"></div>
+    <div class="panel">
+      <div class="eyebrow">Til min prinsesse Sarah</div>
+      <h1>Sarah's Adventure ❤️</h1>
+      <div class="sub">Kode fix · sprite er koblet rigtigt på renderingen</div>
+      <button id="startBtn">NYT SPIL</button>
+    </div>
+  </div>
 
-function resize(){
-c.width=innerWidth;
-c.height=innerHeight;
-}
-resize();
-onresize=resize;
+  <canvas id="game"></canvas>
 
-let player={x:200,y:0,vy:0};
-let ground;
+  <div id="hud" class="hidden">
+    <div>❤️ <span id="lives">3</span> · 🪙 <span id="coins">0</span></div>
+    <div>Love Beach</div>
+  </div>
 
-function draw(){
-ground=c.height-140;
+  <div id="controls" class="hidden">
+    <div class="left">
+      <button class="control" data-act="left">◀</button>
+      <button class="control" data-act="right">▶</button>
+    </div>
+    <div class="right">
+      <button class="control" data-act="jump">⤒ Hop</button>
+    </div>
+  </div>
 
-// SKY
-let g=ctx.createLinearGradient(0,0,0,c.height);
-g.addColorStop(0,'#2a1450');
-g.addColorStop(0.6,'#7a3db8');
-g.addColorStop(1,'#ffb3c1');
-ctx.fillStyle=g;
-ctx.fillRect(0,0,c.width,c.height);
-
-// SUN
-let sun=ctx.createRadialGradient(c.width*0.75,150,20,c.width*0.75,150,120);
-sun.addColorStop(0,'rgba(255,220,150,0.9)');
-sun.addColorStop(1,'rgba(255,220,150,0)');
-ctx.fillStyle=sun;
-ctx.fillRect(0,0,c.width,c.height);
-
-// GROUND
-ctx.fillStyle="#d2a679";
-ctx.fillRect(0,ground,c.width,200);
-
-// SHADOW
-ctx.fillStyle="rgba(0,0,0,0.2)";
-ctx.beginPath();
-ctx.ellipse(player.x+60,ground+10,50,10,0,0,Math.PI*2);
-ctx.fill();
-
-// PLAYER
-ctx.save();
-ctx.shadowColor="rgba(255,120,180,0.9)";
-ctx.shadowBlur=40;
-ctx.fillStyle="#ff6fae";
-ctx.fillRect(player.x, ground-160, 120, 160);
-ctx.restore();
-
-// BOSS
-ctx.save();
-ctx.shadowColor="red";
-ctx.shadowBlur=50;
-ctx.fillStyle="#b22222";
-ctx.beginPath();
-ctx.arc(c.width-180, ground-60, 60, 0, Math.PI*2);
-ctx.fill();
-ctx.restore();
-
-// HP BAR
-ctx.fillStyle="#fff";
-ctx.fillRect(c.width-260,40,200,20);
-ctx.fillStyle="red";
-ctx.fillRect(c.width-260,40,150,20);
-}
-
-function update(){
-player.vy+=0.8;
-player.y+=player.vy;
-if(player.y>0){player.y=0;player.vy=0;}
-}
-
-function loop(){
-update();
-draw();
-requestAnimationFrame(loop);
-}
-loop();
-</script>
+  <script src="game.js"></script>
 </body>
 </html>
