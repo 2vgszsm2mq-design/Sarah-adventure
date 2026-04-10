@@ -12,27 +12,29 @@ body{position:fixed;inset:0}
 .menu-bg{
   position:absolute;inset:0;
   background:
-    linear-gradient(rgba(12,6,24,.20), rgba(12,6,24,.42)),
+    linear-gradient(rgba(12,6,24,.28), rgba(12,6,24,.46)),
     url('assets/cover.jpg') center center / cover no-repeat;
 }
 .panel{
   position:relative;
-  width:min(88vw,760px);
+  width:min(88vw,820px);
   padding:28px 24px;
   border-radius:28px;
   text-align:center;
   color:white;
-  background:rgba(27,13,44,.50);
+  background:rgba(27,13,44,.52);
   border:2px solid rgba(255,255,255,.14);
   backdrop-filter:blur(10px) saturate(120%);
   box-shadow:0 24px 70px rgba(0,0,0,.32);
 }
 .eyebrow{font-size:clamp(22px,2.8vw,34px);margin-bottom:10px}
-h1{margin:0 0 22px;font-size:clamp(38px,6vw,74px);line-height:1.02}
+h1{margin:0 0 12px;font-size:clamp(38px,6vw,74px);line-height:1.02}
+.sub{margin:0 0 24px;font-size:clamp(18px,2vw,25px)}
 #startBtn{
   border:none;border-radius:18px;min-width:240px;padding:18px 24px;
   font-size:clamp(22px,2.4vw,30px);font-weight:800;color:white;
   background:linear-gradient(180deg,#ff90ca,#ff4ca5);
+  box-shadow:0 12px 28px rgba(0,0,0,.24),0 0 22px rgba(255,77,166,.30);
 }
 #hud{
   position:fixed;left:16px;right:16px;top:10px;z-index:10;display:flex;justify-content:space-between;
@@ -47,4 +49,5 @@ h1{margin:0 0 22px;font-size:clamp(38px,6vw,74px);line-height:1.02}
   pointer-events:auto;min-width:92px;min-height:66px;padding:12px 14px;border-radius:18px;
   border:1px solid rgba(255,255,255,.28);color:white;font-weight:800;font-size:20px;
   background:rgba(255,255,255,.22);backdrop-filter:blur(10px) saturate(120%);
+  box-shadow:0 12px 24px rgba(0,0,0,.18);
 }
