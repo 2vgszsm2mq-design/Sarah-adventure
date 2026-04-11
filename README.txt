@@ -1,1 +1,1 @@
-Åbn index.html i browser eller upload mappen til Netlify Drop.
+V5 fixed. Åbn index.html direkte eller upload hele mappen til Netlify Drop.
