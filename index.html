@@ -3,47 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Sarah's Adventure – clean fix</title>
+<title>Sarah's Adventure – V1 Stable Core</title>
 <style>
-html,body{
-  margin:0; width:100%; height:100%; overflow:hidden;
-  background:#1f1033; font-family:Arial,Helvetica,sans-serif;
-}
-body{position:fixed; inset:0; overscroll-behavior:none;}
-#game{position:fixed; inset:0; width:100vw; height:100vh; display:block; z-index:1;}
-#menu{
-  position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
-  z-index:10; background:linear-gradient(#2d1748,#9a6c93);
-}
-.panel{
-  width:min(88vw,760px); padding:28px 24px; border-radius:28px; text-align:center;
-  color:#fff; background:rgba(27,13,44,.60); border:2px solid rgba(255,255,255,.15);
-}
-h1{margin:0 0 10px; font-size:clamp(38px,6vw,72px);}
-.sub{margin:0 0 22px; font-size:clamp(18px,2vw,24px);}
-#startBtn{
-  border:none; border-radius:18px; min-width:240px; padding:18px 24px;
-  font-size:clamp(22px,2.4vw,30px); font-weight:800; color:white;
-  background:linear-gradient(180deg,#ff90ca,#ff4ca5);
-}
-.hidden{display:none !important;}
-#hud{
-  position:fixed; left:16px; right:16px; top:10px; z-index:11;
-  display:flex; justify-content:space-between; color:white; font-weight:800;
-  font-size:clamp(18px,2vw,22px); text-shadow:0 3px 10px rgba(0,0,0,.52);
-  pointer-events:none;
-}
-#controls{
-  position:fixed; left:0; right:0; bottom:max(10px, env(safe-area-inset-bottom));
-  z-index:12; display:flex; justify-content:space-between; padding:12px 16px;
-  pointer-events:none;
-}
-.group{display:flex; gap:12px;}
-.control{
-  pointer-events:auto; min-width:92px; min-height:66px; padding:12px 14px;
-  border-radius:18px; border:1px solid rgba(255,255,255,.28); color:white;
-  font-weight:800; font-size:20px; background:rgba(255,255,255,.22);
-}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f1033;font-family:Arial,Helvetica,sans-serif}
+body{position:fixed;inset:0;overscroll-behavior:none}
+#game{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:1}
+#menu{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:linear-gradient(#2d1748,#9a6c93)}
+.panel{width:min(88vw,760px);padding:28px 24px;border-radius:28px;text-align:center;color:#fff;background:rgba(27,13,44,.60);border:2px solid rgba(255,255,255,.15)}
+h1{margin:0 0 10px;font-size:clamp(38px,6vw,72px)}
+.sub{margin:0 0 22px;font-size:clamp(18px,2vw,24px)}
+#startBtn{border:none;border-radius:18px;min-width:240px;padding:18px 24px;font-size:clamp(22px,2.4vw,30px);font-weight:800;color:white;background:linear-gradient(180deg,#ff90ca,#ff4ca5)}
+.hidden{display:none !important}
+#hud{position:fixed;left:16px;right:16px;top:10px;z-index:11;display:flex;justify-content:space-between;color:white;font-weight:800;font-size:clamp(18px,2vw,22px);text-shadow:0 3px 10px rgba(0,0,0,.52);pointer-events:none}
+#controls{position:fixed;left:0;right:0;bottom:max(10px, env(safe-area-inset-bottom));z-index:12;display:flex;justify-content:space-between;padding:12px 16px;pointer-events:none}
+.group{display:flex;gap:12px}
+.control{pointer-events:auto;min-width:92px;min-height:66px;padding:12px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.28);color:white;font-weight:800;font-size:20px;background:rgba(255,255,255,.22)}
 </style>
 </head>
 <body>
@@ -51,18 +25,15 @@ h1{margin:0 0 10px; font-size:clamp(38px,6vw,72px);}
   <div class="panel">
     <div style="font-size:clamp(22px,2.8vw,34px);margin-bottom:10px">Til min prinsesse Sarah</div>
     <h1>Sarah's Adventure ❤️</h1>
-    <div class="sub">Clean fix – menu, start og spil skal virke nu</div>
+    <div class="sub">V1 Stable Core</div>
     <button id="startBtn">NYT SPIL</button>
   </div>
 </div>
-
 <canvas id="game"></canvas>
-
 <div id="hud" class="hidden">
   <div>❤️ <span id="lives">3</span> · 🪙 <span id="coins">0</span></div>
   <div>Love Beach</div>
 </div>
-
 <div id="controls" class="hidden">
   <div class="group">
     <button class="control" data-act="left">◀</button>
@@ -83,12 +54,17 @@ const livesEl = document.getElementById("lives");
 const coinsEl = document.getElementById("coins");
 const startBtn = document.getElementById("startBtn");
 
+const sarahIdle = new Image(); sarahIdle.src = "data:image/png;base64,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";
+const sarahJump = new Image(); sarahJump.src = "data:image/png;base64,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";
+const enemyImg = new Image(); enemyImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABgCAYAAADVenpJAAAC30lEQVR4nO3bMW7cMBSEYTrwIVzawLbu5QskbXLSpE1OoN7tBna5t3CqRdaCKFEi+d6Q+r/WG4h8M6LkNRICAAAAAAAAAAAAAAAAAAAAAAAAgPbceS/Aws/Hx4+9//bH+3vXM+puczlhp+qpFM1vxCLwNS0XosmFK4Qe01oZmlqscvBTrRShiUW2FPyUehGkF9dy8FOqRfjivYCYnsIPQXc/cq1UHVRJSqeB1AlwhPBD0NqnTAGUhmJBZb8SBVAZhjWFfbsXQGEInrz371oA782r8JyDWwEI/zOvebg/AuDLpQDc/fM85mJeAMJfZj2fe8uLlfb97W31M7+enpq5jgfTE6Bku1NC2fI57+vcsjwFzApwHgaO/g2s5lX9EUDw+11ndxrHan88qlaAafCvl0utS3Xp9XIJzw8PIYS6RajyCOCur6PGXIueAARfX+nToEgBCN5eqSJkFYDg/eUWYVcB9gR/faHxYHVtzz3uLcLml0CVu/7vy0vRz3lfp5St+SS3RSV4pEs5DVY/QPDtWyoCJ0DHUk6A5HeAml9HorzUvHaFymmgq/pvAXsuAht7cskOktPAX84NWexOpgj2SpzExf4auGUxPELmecyw6J+DT+N4t7Ywwl+WMr+SM6wWxvSRMLdoHhv/pcynxs1T/W48D8PH0sIpwXKwa/PLJXEcH7kE3o9Eif8a5j0ELwr7lihACBrDsKSyX5kChKAzlNqU9imzkKke3wuUgr+SOgFuKQ4rh+p+JBc11fJpoBr8leLivsZ+cB6G35YLyXEax28LP/5jtpAVCgWIBh6jXISV4GPcCuFVgM2hxyiUYWfoMaZlsC5AseBjLApROPAYkyJYFaB68EtySmEU9pKqRbAogGv4nahWAtnvAWCDAhycRQFkfudtVPPvALd4H0jX1W8BUxQhruvvAeZQhgN+E7jkCIWQeS9SLMCclkshE/acVgqQyrIo0sECAAAAADDjH+C7F8mwe/szAAAAAElFTkSuQmCC";
+const coinImg = new Image(); coinImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAC20lEQVR4nO2dS0oEQQyGM+IBRBB062bu48ozzIE8gyvv48atgiDeYFxogTZTViWVV3X/325g6ErnS9Lz6AcRAAAAAAAAAAAAANgKu+gAOBxf7o+9793dPk6xb2mD5CS7l4xSUgVkkfQaWWSkCMIz8UuiRYQuHpn4JVEiQhbNlPgl3iLOPBcjyp18Iv/4XAVkT37B9cOAxyKzJP4U1iPJvANmTj6RffymdtWDf38j2h/a73t+ILq6Vl3aqhPMBKgl//JufBsfT+PbIBsJJgKGk99b6VwUOkNbgrqAoeRbJX7JoAhNCedaGxqGM99btLazP5gcJySodoC4+ltzvifpNVoyhMcHrS5QEyBKfqvqG4l/ff388/rm5qL+5tY6gm7QkKAiQD35nRXPElD4b80ACe6/BRGRSvLF1La/P3zH5cxwB7Crv5Z8QeJFHfCbWhzMThjpgpgOWGJd9dnW/cWQALXqz4RgFI189/HrAMXRo8qp9R2PB2IBLOu1nYlOfqEWB0OCtAv8OiD76FniFK+9gOzVX1DoAgkiAbP/yWKFJC9+P8Zlq/hTBMRoO4ICvlmaYLgfOb6IbRgICIYtoPtAs5bxU+jcH+6BGB0QDAQEAwHBQEAwEBAMBAQDAcFAQDAQEAwEBMMW0H0KRoLzLlXp3B/uKSrogGAgIBhbAWsZQ4b7gQ4IRiQg+v4KWZHkxb4DZh9DxvFjBAUjFsBqt1m7gBG3dCz7dcBsEpziHRLAtj6LhM1doLFhhgWsrgscq58oqgOySgiIS0WAqAqySZj5OuGC+LT1yLPohIWg9WuA6ggSBxXVDcHJJ8r0KchbQpIRmPd+QVas/X5BBbXLmDRkKFX7NHfMKpjcM66Xrd8zrrCGC/os//8wPwjP/ueNdfyuyZmpG7wKx/Vj6Czd4Bmn+/eA7BK848PzA37Y1PMDluAJGknAM2QSgacoJWSNzxEDAAAAAAAAAAAAcOQLrQwUCTZnuxAAAAAASUVORK5CYII=";
+
 let groundY = 0;
 const keys = { left:false, right:false, jump:false };
 const state = { running:false, cameraX:0, time:0 };
 
 const player = {
-  x: 120, y: 0, w: 56, h: 96,
+  x: 120, y: 0, w: 76, h: 116,
   vx: 0, vy: 0, speed: 5.5, jump: -15.5,
   onGround: false, lives: 3, coins: 0, facing: 1
 };
@@ -117,8 +93,9 @@ function buildWorld(){
     {x:1980, y:groundY, w:720, h:140, ground:true},
     {x:420, y:groundY-120, w:220, h:18, ground:false},
     {x:860, y:groundY-220, w:220, h:18, ground:false},
-    {x:1460, y:groundY-120, w:220, h:18, ground:false},
+    {x:1460, y:groundY-120, w:220, h:18, ground:false}
   ];
+
   world.coins = [];
   [260,360,460,580,700,900,1040,1200,1400,1560,1720,1940,2160,2380].forEach((x,i)=>{
     world.coins.push({
@@ -126,9 +103,9 @@ function buildWorld(){
       r: 12, collected:false, pulse: Math.random() * Math.PI * 2
     });
   });
+
   world.enemies = [
-    {x:1140, y:groundY-46, w:46, h:46, min:1040, max:1320, dir:1, alive:true},
-    {x:2080, y:groundY-46, w:46, h:46, min:1980, max:2260, dir:1, alive:true}
+    {x:1140, y:groundY-58, w:58, h:44, min:1040, max:1320, dir:1, alive:true}
   ];
 
   player.x = 120;
@@ -186,7 +163,6 @@ function overlap(a,b){
 
 function update(){
   if (!state.running) return;
-
   state.time++;
 
   if (keys.left) { player.vx = -player.speed; player.facing = -1; }
@@ -324,28 +300,23 @@ function drawPlatform(p){
 }
 
 function drawEnemy(e){
-  ctx.save();
-  ctx.shadowColor = "rgba(255,80,80,.35)";
-  ctx.shadowBlur = 16;
-  ctx.fillStyle = "#d33b3b";
-  ctx.beginPath();
-  ctx.arc(e.x + e.w/2, e.y + e.h/2, 22, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle = "#fff";
-  ctx.fillRect(e.x + 12, e.y + 12, 8, 8);
-  ctx.fillRect(e.x + 26, e.y + 12, 8, 8);
-  ctx.restore();
+  ctx.drawImage(enemyImg, e.x, e.y, e.w, e.h);
 }
 
 function drawSarah(){
+  const img = player.onGround ? sarahIdle : sarahJump;
+  const drawW = player.w;
+  const drawH = player.h;
+  const offsetX = player.x;
+  const offsetY = player.y;
+
   ctx.save();
   if (player.facing === -1){
-    ctx.translate(player.x + player.w, 0);
+    ctx.translate(offsetX + drawW, 0);
     ctx.scale(-1, 1);
-    ctx.translate(-player.x, 0);
+    ctx.translate(-offsetX, 0);
   }
-  ctx.fillStyle = "#efb3c0";
-  ctx.fillRect(player.x, player.y, player.w, player.h);
+  ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
   ctx.restore();
 }
 
@@ -358,14 +329,10 @@ function drawWorld(){
   for (const c of world.coins){
     if (c.collected) continue;
     const glow = 9 + Math.sin(c.pulse) * 2;
-    ctx.fillStyle = "rgba(255,231,150,.22)";
-    ctx.beginPath();
-    ctx.arc(c.x, c.y, c.r + glow, 0, Math.PI*2);
-    ctx.fill();
-    ctx.fillStyle = "#ffd84d";
-    ctx.beginPath();
-    ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
-    ctx.fill();
+    ctx.globalAlpha = 0.24;
+    ctx.drawImage(coinImg, c.x-glow, c.y-glow, 28+glow, 28+glow);
+    ctx.globalAlpha = 1;
+    ctx.drawImage(coinImg, c.x-14, c.y-14, 28, 28);
   }
 
   for (const e of world.enemies) if (e.alive) drawEnemy(e);
