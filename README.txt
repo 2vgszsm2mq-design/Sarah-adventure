@@ -1,1 +1,1 @@
-Upload hele mappen til Netlify Drop og åbn linket i Safari.
+Åbn index.html i browser eller upload mappen til Netlify Drop.
