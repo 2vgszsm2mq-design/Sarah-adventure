@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Sarah's Adventure – V2 Character Feel</title>
+<title>Sarah's Adventure – V3 World Polish</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f1033;font-family:Arial,Helvetica,sans-serif}
 body{position:fixed;inset:0;overscroll-behavior:none}
@@ -24,7 +24,7 @@ h1{margin:0 0 10px;font-size:clamp(38px,6vw,72px)} .sub{margin:0 0 22px;font-siz
   <div class="panel">
     <div style="font-size:clamp(22px,2.8vw,34px);margin-bottom:10px">Til min prinsesse Sarah</div>
     <h1>Sarah's Adventure ❤️</h1>
-    <div class="sub">V2 Character Feel</div>
+    <div class="sub">V3 World Polish</div>
     <button id="startBtn">NYT SPIL</button>
   </div>
 </div>
@@ -54,14 +54,8 @@ const coinsEl = document.getElementById("coins");
 const startBtn = document.getElementById("startBtn");
 
 const sprites = {
-  idle1: new Image(),
-  idle2: new Image(),
-  walk1: new Image(),
-  walk2: new Image(),
-  jump: new Image(),
-  land: new Image(),
-  enemy: new Image(),
-  coin: new Image()
+  idle1: new Image(), idle2: new Image(), walk1: new Image(), walk2: new Image(),
+  jump: new Image(), land: new Image(), enemy: new Image(), coin: new Image()
 };
 sprites.idle1.src = "data:image/png;base64,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";
 sprites.idle2.src = "data:image/png;base64,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";
@@ -75,20 +69,13 @@ sprites.coin.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAA
 let groundY = 0;
 const keys = { left:false, right:false, jump:false };
 const state = { running:false, cameraX:0, time:0 };
-
 const player = {
-  x: 120, y: 0, w: 86, h: 126,
+  x: 120, y: 0, w: 96, h: 140,
   vx: 0, vy: 0, speed: 6.0, jump: -16.2,
   onGround: false, lives: 3, coins: 0, facing: 1,
   squash: 1, landedAt: -999, wasOnGround: false
 };
-
-const world = {
-  width: 2600,
-  platforms: [],
-  coins: [],
-  enemies: []
-};
+const world = { width: 3400, platforms: [], coins: [], enemies: [] };
 
 function resizeCanvas(){
   canvas.width = Math.max(1, window.innerWidth);
@@ -102,24 +89,29 @@ resizeCanvas();
 
 function buildWorld(){
   world.platforms = [
-    {x:0, y:groundY, w:900, h:140, ground:true},
-    {x:980, y:groundY, w:920, h:140, ground:true},
-    {x:1980, y:groundY, w:720, h:140, ground:true},
+    {x:0, y:groundY, w:980, h:140, ground:true},
+    {x:1060, y:groundY, w:860, h:140, ground:true},
+    {x:2010, y:groundY, w:760, h:140, ground:true},
+    {x:2860, y:groundY, w:700, h:140, ground:true},
     {x:420, y:groundY-120, w:220, h:18, ground:false},
-    {x:860, y:groundY-220, w:220, h:18, ground:false},
-    {x:1460, y:groundY-120, w:220, h:18, ground:false}
+    {x:760, y:groundY-210, w:240, h:18, ground:false},
+    {x:1260, y:groundY-130, w:220, h:18, ground:false},
+    {x:1680, y:groundY-220, w:260, h:18, ground:false},
+    {x:2240, y:groundY-130, w:220, h:18, ground:false},
+    {x:2700, y:groundY-220, w:240, h:18, ground:false}
   ];
   world.coins = [];
-  [260,360,460,580,700,900,1040,1200,1400,1560,1720,1940,2160,2380].forEach((x,i)=>{
+  [220,320,420,520,660,800,900,1040,1180,1320,1460,1620,1760,1920,2060,2240,2380,2520,2700,2860,3040,3220].forEach((x,i)=>{
     world.coins.push({
-      x, y: i % 2 === 0 ? groundY - 86 : groundY - 170,
+      x, y: [groundY-86, groundY-170, groundY-250][i%3],
       r: 12, collected:false, pulse: Math.random() * Math.PI * 2
     });
   });
   world.enemies = [
-    {x:1140, y:groundY-58, w:58, h:44, min:1040, max:1320, dir:1, alive:true}
+    {x:1140, y:groundY-58, w:58, h:44, min:1080, max:1380, dir:1, alive:true},
+    {x:2140, y:groundY-58, w:58, h:44, min:2060, max:2320, dir:1, alive:true},
+    {x:3000, y:groundY-58, w:58, h:44, min:2940, max:3220, dir:1, alive:true}
   ];
-
   player.x = 120; player.y = groundY - player.h; player.vx = 0; player.vy = 0;
   player.coins = 0; player.lives = 3; player.onGround = false; player.facing = 1;
   player.squash = 1; player.landedAt = -999; player.wasOnGround = false;
@@ -166,40 +158,26 @@ function overlap(a,b){
 function update(){
   if (!state.running) return;
   state.time++;
-
   if (keys.left) { player.vx = -player.speed; player.facing = -1; }
   else if (keys.right) { player.vx = player.speed; player.facing = 1; }
   else player.vx *= 0.74;
-
   if (keys.jump && player.onGround){
-    player.vy = player.jump;
-    player.onGround = false;
-    keys.jump = false;
-    player.squash = 0.88;
+    player.vy = player.jump; player.onGround = false; keys.jump = false; player.squash = 0.88;
   }
-
   player.vy += player.vy < 0 ? 0.72 : 0.98;
   if (player.vy > 18) player.vy = 18;
-
-  player.x += player.vx;
-  player.y += player.vy;
-  player.onGround = false;
+  player.x += player.vx; player.y += player.vy; player.onGround = false;
 
   for (const p of world.platforms){
     if (overlap(player, p)){
       const prevBottom = player.y + player.h - player.vy;
       if (prevBottom <= p.y + 18 && player.vy >= 0){
-        player.y = p.y - player.h;
-        player.vy = 0;
-        player.onGround = true;
+        player.y = p.y - player.h; player.vy = 0; player.onGround = true;
       }
     }
   }
 
-  if (player.onGround && !player.wasOnGround){
-    player.landedAt = state.time;
-    player.squash = 1.12;
-  }
+  if (player.onGround && !player.wasOnGround){ player.landedAt = state.time; player.squash = 1.12; }
   player.wasOnGround = player.onGround;
   player.squash += (1 - player.squash) * 0.18;
 
@@ -209,36 +187,25 @@ function update(){
     if (e.x < e.min || e.x > e.max) e.dir *= -1;
     if (overlap(player, e)){
       const stomp = player.vy > 2 && player.y + player.h - e.y < 28;
-      if (stomp){
-        e.alive = false;
-        player.vy = -9;
-      } else {
-        player.lives = Math.max(1, player.lives - 1);
-        player.x = Math.max(0, player.x - 36);
-      }
+      if (stomp){ e.alive = false; player.vy = -9; }
+      else { player.lives = Math.max(1, player.lives - 1); player.x = Math.max(0, player.x - 36); }
     }
   }
 
   for (const c of world.coins){
     c.pulse += 0.08;
     if (!c.collected && Math.hypot(player.x + player.w/2 - c.x, player.y + player.h/2 - c.y) < 42){
-      c.collected = true;
-      player.coins += 1;
+      c.collected = true; player.coins += 1;
     }
   }
 
   if (player.x < 0) player.x = 0;
   if (player.x > world.width - player.w) player.x = world.width - player.w;
-  if (player.y > canvas.height + 200){
-    player.x = 120;
-    player.y = groundY - player.h;
-    player.vx = 0;
-    player.vy = 0;
-  }
+  if (player.y > canvas.height + 200){ player.x = 120; player.y = groundY - player.h; player.vx = 0; player.vy = 0; }
 
-  let target = player.x - canvas.width * 0.36;
+  let target = player.x - canvas.width * 0.38;
   target = Math.max(0, Math.min(target, world.width - canvas.width));
-  state.cameraX += (target - state.cameraX) * 0.12;
+  state.cameraX += (target - state.cameraX) * 0.11;
 
   livesEl.textContent = player.lives;
   coinsEl.textContent = player.coins;
@@ -246,71 +213,80 @@ function update(){
 
 function drawBackground(){
   const sky = ctx.createLinearGradient(0,0,0,canvas.height);
-  sky.addColorStop(0,"#2d1748");
-  sky.addColorStop(0.55,"#6c39a5");
-  sky.addColorStop(1,"#d08aa8");
-  ctx.fillStyle = sky;
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  sky.addColorStop(0,"#261341"); sky.addColorStop(0.42,"#56309a"); sky.addColorStop(1,"#d49db4");
+  ctx.fillStyle = sky; ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  const sunX = canvas.width * 0.78;
-  const sunY = 150;
-  const sun = ctx.createRadialGradient(sunX,sunY,10,sunX,sunY,110);
-  sun.addColorStop(0,"rgba(255,244,184,.95)");
-  sun.addColorStop(.35,"rgba(255,219,140,.46)");
-  sun.addColorStop(1,"rgba(255,219,140,0)");
-  ctx.fillStyle = sun;
-  ctx.fillRect(sunX-120, sunY-120, 240, 240);
+  const sunX = canvas.width * 0.78, sunY = 150;
+  const sun = ctx.createRadialGradient(sunX,sunY,10,sunX,sunY,140);
+  sun.addColorStop(0,"rgba(255,245,190,.98)"); sun.addColorStop(.30,"rgba(255,223,148,.50)"); sun.addColorStop(1,"rgba(255,223,148,0)");
+  ctx.fillStyle = sun; ctx.fillRect(sunX-160, sunY-160, 320, 320);
 
   ctx.save();
   ctx.translate(-(state.cameraX * 0.10), 0);
-  for (let i=0;i<6;i++){
-    const bx = i*480 - 60;
-    ctx.fillStyle = i % 2 ? "rgba(80,34,112,.28)" : "rgba(60,24,92,.36)";
+  for (let i=0;i<8;i++){
+    const bx = i*450 - 80;
+    ctx.fillStyle = i % 2 ? "rgba(88,43,128,.30)" : "rgba(62,25,98,.40)";
     ctx.beginPath();
     ctx.moveTo(bx, canvas.height - 160);
-    ctx.quadraticCurveTo(bx+130, canvas.height - 360, bx+280, canvas.height - 160);
-    ctx.closePath();
-    ctx.fill();
+    ctx.quadraticCurveTo(bx+150, canvas.height - 370, bx+320, canvas.height - 160);
+    ctx.closePath(); ctx.fill();
   }
   ctx.restore();
 
-  ctx.fillStyle = "rgba(255,255,255,.14)";
-  for (let i=0;i<7;i++){
-    const x = ((i*290 - state.cameraX*0.14) % (canvas.width+220)) - 100;
+  ctx.fillStyle = "rgba(255,255,255,.16)";
+  for (let i=0;i<9;i++){
+    const x = ((i*250 - state.cameraX*0.14) % (canvas.width+220)) - 100;
     const y = 120 + (i%3)*34;
-    ctx.beginPath();
-    ctx.arc(x,y,30,0,Math.PI*2);
-    ctx.arc(x+36,y+8,24,0,Math.PI*2);
-    ctx.arc(x-28,y+10,22,0,Math.PI*2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(x,y,30,0,Math.PI*2); ctx.arc(x+36,y+8,24,0,Math.PI*2); ctx.arc(x-28,y+10,22,0,Math.PI*2); ctx.fill();
   }
 
-  ctx.fillStyle = "rgba(214,185,240,.38)";
-  ctx.fillRect(0, canvas.height - 188, canvas.width, 74);
+  ctx.fillStyle = "rgba(217,190,244,.40)";
+  ctx.fillRect(0, canvas.height - 194, canvas.width, 78);
+  ctx.fillStyle = "rgba(240,214,255,.22)";
+  ctx.fillRect(0, canvas.height - 158, canvas.width, 16);
 
   const sand = ctx.createLinearGradient(0, canvas.height - 160, 0, canvas.height);
-  sand.addColorStop(0, "#e8c89d");
-  sand.addColorStop(1, "#c79a63");
-  ctx.fillStyle = sand;
-  ctx.fillRect(0, canvas.height - 160, canvas.width, 200);
+  sand.addColorStop(0, "#eccb9d"); sand.addColorStop(.55, "#d8b17c"); sand.addColorStop(1, "#c18f58");
+  ctx.fillStyle = sand; ctx.fillRect(0, canvas.height - 160, canvas.width, 200);
+
+  ctx.save();
+  ctx.translate(-(state.cameraX * 0.18),0);
+  for (const px of [140, 1320, 2410, 3320]){
+    ctx.fillStyle = "rgba(24,10,32,.92)";
+    ctx.fillRect(px, canvas.height-300, 10, 140);
+    for (let i=0;i<6;i++){
+      ctx.save();
+      ctx.translate(px+5, canvas.height-300);
+      ctx.rotate(-1.05 + i*0.38);
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.quadraticCurveTo(74,-16,132,20);
+      ctx.quadraticCurveTo(74,16,0,6);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+  ctx.restore();
 }
 
 function drawPlatform(p){
   if (p.ground){
-    ctx.fillStyle = "#d7af79";
-    ctx.fillRect(p.x, p.y, p.w, p.h);
-    ctx.fillStyle = "#75d767";
-    ctx.fillRect(p.x, p.y, p.w, 18);
+    ctx.fillStyle = "#c99e6a"; ctx.fillRect(p.x, p.y, p.w, p.h);
+    ctx.fillStyle = "#7adc6f"; ctx.fillRect(p.x, p.y, p.w, 20);
+    ctx.fillStyle = "rgba(255,255,255,.10)";
+    for (let x=p.x+24; x<p.x+p.w; x+=84) ctx.fillRect(x, p.y+40, 22, 8);
   } else {
-    ctx.fillStyle = "#efce98";
-    ctx.fillRect(p.x, p.y, p.w, p.h);
-    ctx.fillStyle = "#ffe0af";
-    ctx.fillRect(p.x, p.y, p.w, 18);
+    ctx.fillStyle = "#f1d4a6"; ctx.fillRect(p.x, p.y, p.w, p.h);
+    ctx.fillStyle = "#fff0c8"; ctx.fillRect(p.x, p.y, p.w, 16);
   }
 }
 
 function drawEnemy(e){
+  ctx.save();
+  ctx.shadowColor = "rgba(255,80,80,.30)";
+  ctx.shadowBlur = 16;
   ctx.drawImage(sprites.enemy, e.x, e.y, e.w, e.h);
+  ctx.restore();
 }
 
 function getSarahSprite(){
@@ -327,13 +303,12 @@ function drawSarah(){
   const drawH = player.h / player.squash;
   const offsetX = player.x + (player.w - drawW)/2;
   const offsetY = player.y + (player.h - drawH);
-
   ctx.save();
   if (player.facing === -1){
-    ctx.translate(offsetX + drawW, 0);
-    ctx.scale(-1, 1);
-    ctx.translate(-offsetX, 0);
+    ctx.translate(offsetX + drawW, 0); ctx.scale(-1, 1); ctx.translate(-offsetX, 0);
   }
+  ctx.shadowColor = "rgba(255,120,180,.25)";
+  ctx.shadowBlur = 18;
   ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
   ctx.restore();
 }
@@ -341,29 +316,22 @@ function drawSarah(){
 function drawWorld(){
   ctx.save();
   ctx.translate(-state.cameraX, 0);
-
   for (const p of world.platforms) drawPlatform(p);
-
   for (const c of world.coins){
     if (c.collected) continue;
-    const glow = 9 + Math.sin(c.pulse) * 2;
-    ctx.globalAlpha = 0.24;
-    ctx.drawImage(sprites.coin, c.x-glow, c.y-glow, 28+glow, 28+glow);
+    const glow = 10 + Math.sin(c.pulse) * 2;
+    ctx.globalAlpha = 0.28;
+    ctx.drawImage(sprites.coin, c.x-glow, c.y-glow, 30+glow, 30+glow);
     ctx.globalAlpha = 1;
-    ctx.drawImage(sprites.coin, c.x-14, c.y-14, 28, 28);
+    ctx.drawImage(sprites.coin, c.x-15, c.y-15, 30, 30);
   }
-
   for (const e of world.enemies) if (e.alive) drawEnemy(e);
   drawSarah();
-
   ctx.restore();
 }
 
 function loop(){
-  update();
-  drawBackground();
-  if (state.running) drawWorld();
-  requestAnimationFrame(loop);
+  update(); drawBackground(); if (state.running) drawWorld(); requestAnimationFrame(loop);
 }
 loop();
 </script>
