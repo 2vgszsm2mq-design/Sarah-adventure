@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Sarah's Adventure – V6.1 Clean Feel</title>
+<title>Sarah's Adventure – V6.2 Feel Boost</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#1f1033;font-family:Arial,Helvetica,sans-serif}
 body{position:fixed;inset:0;overscroll-behavior:none}
@@ -26,7 +26,7 @@ h1{margin:0 0 10px;font-size:clamp(38px,6vw,72px)}
   <div class="panel">
     <div style="font-size:clamp(22px,2.8vw,34px);margin-bottom:10px">Til min prinsesse Sarah</div>
     <h1>Sarah's Adventure ❤️</h1>
-    <div class="sub">V6.1 Clean Feel</div>
+    <div class="sub">V6.2 Feel Boost</div>
     <button id="startBtn">NYT SPIL</button>
   </div>
 </div>
@@ -62,39 +62,23 @@ let running = false;
 const keys = {left:false,right:false,jump:false};
 
 const state = {
-  cameraX:0,
-  time:0,
-  shake:0,
-  win:false,
-  particles:[],
-  texts:[]
+  cameraX:0,time:0,shake:0,win:false,
+  particles:[], texts:[],
+  combo:0, comboTimer:0
 };
 
 const player = {
   x:120, y:0, w:40, h:70,
   vx:0, vy:0,
-  maxSpeed:6.8,
-  accel:0.75,
-  friction:0.78,
-  jump:-16.5,
-  onGround:false,
-  lives:3,
-  coins:0,
-  facing:1,
-  squashX:1,
-  squashY:1,
-  landedAt:-999,
-  wasOnGround:false,
-  coyote:0,
-  jumpBuffer:0
+  maxSpeed:6.9, accel:0.76, friction:0.78, jump:-16.5,
+  onGround:false, lives:3, coins:0, facing:1,
+  squashX:1, squashY:1,
+  landedAt:-999, wasOnGround:false, coyote:0, jumpBuffer:0,
+  blink:0, idleSeed:0
 };
 
 const world = {
-  width:4300,
-  platforms:[],
-  coins:[],
-  enemies:[],
-  goalX:3920
+  width:4300, platforms:[], coins:[], enemies:[], goalX:3920
 };
 
 function resizeCanvas(){
@@ -142,21 +126,22 @@ function buildWorld(){
     [3080,groundY-180],[3200,groundY-140],[3320,groundY-180],
     [3570,groundY-280],[3700,groundY-230],[3830,groundY-180],[3960,groundY-130]
   ];
-  coinPositions.forEach(([x,y], i)=> world.coins.push({x,y,r:12,collected:false,pulse:i*0.3,magnet:false}));
+  coinPositions.forEach(([x,y], i)=> world.coins.push({x,y,r:12,collected:false,pulse:i*0.3,magnet:false,trail:0}));
 
   world.enemies = [
-    {x:1120,y:groundY-36,w:42,h:30,min:1060,max:1360,dir:1,alive:true,bob:0},
-    {x:2240,y:groundY-36,w:42,h:30,min:2140,max:2420,dir:1,alive:true,bob:0},
-    {x:3790,y:groundY-36,w:42,h:30,min:3720,max:3990,dir:1,alive:true,bob:0}
+    {x:1120,y:groundY-36,w:42,h:30,min:1060,max:1360,dir:1,alive:true,bob:0,hitFlash:0},
+    {x:2240,y:groundY-36,w:42,h:30,min:2140,max:2420,dir:1,alive:true,bob:0,hitFlash:0},
+    {x:3790,y:groundY-36,w:42,h:30,min:3720,max:3990,dir:1,alive:true,bob:0,hitFlash:0}
   ];
 
   world.goalX = 3920;
 
   Object.assign(player, {
     x:120,y:groundY-player.h,vx:0,vy:0,lives:3,coins:0,onGround:false,facing:1,
-    squashX:1,squashY:1,landedAt:-999,wasOnGround:false,coyote:0,jumpBuffer:0
+    squashX:1,squashY:1,landedAt:-999,wasOnGround:false,coyote:0,jumpBuffer:0,
+    blink:100, idleSeed:Math.random()*999
   });
-  Object.assign(state, {cameraX:0,time:0,shake:0,win:false,particles:[],texts:[]});
+  Object.assign(state, {cameraX:0,time:0,shake:0,win:false,particles:[],texts:[],combo:0,comboTimer:0});
 }
 
 function startGame(){
@@ -201,11 +186,17 @@ function overlap(a,b){ return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h &&
 function addParticles(x,y,color,count=8,spread=4){
   for(let i=0;i<count;i++) state.particles.push({x,y,vx:(Math.random()-.5)*spread,vy:(Math.random()-1.1)*spread,life:24,color,size:2+Math.random()*3});
 }
-function addText(x,y,text,color){ state.texts.push({x,y,text,life:34,color}); }
+function addText(x,y,text,color,size=22){
+  state.texts.push({x,y,text,life:34,color,size});
+}
 
 function update(){
   if(!running) return;
   state.time++;
+  player.blink--;
+  if(player.blink < -8) player.blink = 140 + Math.random()*120;
+  state.comboTimer = Math.max(0, state.comboTimer-1);
+  if(state.comboTimer===0) state.combo = 0;
 
   if(!state.win){
     if(keys.left){ player.vx -= player.accel; player.facing=-1; }
@@ -224,16 +215,13 @@ function update(){
     player.onGround = false;
     player.jumpBuffer = 0;
     player.coyote = 0;
-    player.squashX = 0.86;
-    player.squashY = 1.18;
+    player.squashX = 0.84;
+    player.squashY = 1.22;
     addParticles(player.x+player.w/2, player.y+player.h, "rgba(255,190,220,.8)", 8, 5);
   }
 
-  if(player.vy < 0){
-    player.vy += 0.6;
-  } else {
-    player.vy += 1.0;
-  }
+  if(player.vy < 0) player.vy += 0.6;
+  else player.vy += 1.0;
   if(player.vy > 18) player.vy = 18;
 
   player.x += player.vx;
@@ -253,10 +241,10 @@ function update(){
 
   if(player.onGround && !player.wasOnGround){
     player.landedAt = state.time;
-    player.squashX = 1.18;
-    player.squashY = 0.82;
-    addParticles(player.x+player.w/2, player.y+player.h, "rgba(223,190,140,.75)", 10, 5);
-    state.shake = Math.max(state.shake, 3.8);
+    player.squashX = 1.24;
+    player.squashY = 0.78;
+    addParticles(player.x+player.w/2, player.y+player.h, "rgba(223,190,140,.75)", 12, 6);
+    state.shake = Math.max(state.shake, 4.2);
   }
   player.wasOnGround = player.onGround;
   player.squashX += (1 - player.squashX) * 0.18;
@@ -266,20 +254,21 @@ function update(){
     if(!e.alive) continue;
     e.x += e.dir * 1.55;
     e.bob += 0.18;
+    e.hitFlash = Math.max(0, e.hitFlash-1);
     if(e.x < e.min || e.x > e.max) e.dir *= -1;
     if(overlap(player,e)){
       const stomp = player.vy > 2 && player.y + player.h - e.y < 24;
       if(stomp){
         e.alive = false;
-        player.vy = -11.2;
-        state.shake = 6.2;
-        addParticles(e.x+e.w/2, e.y+e.h/2, "rgba(255,110,110,.85)", 14, 6);
-        addText(e.x-10, e.y-10, "BONK!", "#ffd5d5");
+        player.vy = -11.8;
+        state.shake = 6.8;
+        addParticles(e.x+e.w/2, e.y+e.h/2, "rgba(255,110,110,.88)", 16, 7);
+        addText(e.x-10, e.y-10, "BONK!", "#ffd5d5", 24);
       } else {
         player.lives = Math.max(1, player.lives-1);
         player.x = Math.max(0, player.x - 52);
         player.vx = -2 * player.facing;
-        state.shake = 4.6;
+        state.shake = 4.8;
         addText(player.x, player.y-10, "-1 ❤️", "#ffd5d5");
       }
     }
@@ -287,28 +276,33 @@ function update(){
 
   for(const c of world.coins){
     c.pulse += 0.16;
+    c.trail = Math.max(0, c.trail-1);
     if(c.collected) continue;
     const dx = player.x + player.w/2 - c.x;
     const dy = player.y + player.h/2 - c.y;
     const dist = Math.hypot(dx, dy);
-    if(dist < 72) c.magnet = true;
+    if(dist < 84) c.magnet = true;
     if(c.magnet){
-      c.x += dx * 0.16;
-      c.y += dy * 0.16;
+      c.x += dx * 0.18;
+      c.y += dy * 0.18;
+      c.trail = 3;
     }
     if(dist < 34){
       c.collected = true;
       player.coins += 1;
-      addParticles(c.x, c.y, "rgba(255,220,90,.95)", 12, 6);
-      addText(c.x-8,c.y-12,"+1","#ffe173");
-      state.shake = Math.max(state.shake, 2.2);
+      state.combo += 1;
+      state.comboTimer = 45;
+      addParticles(c.x, c.y, "rgba(255,220,90,.98)", 14, 7);
+      addText(c.x-8,c.y-12,"+1","#ffe173",22);
+      if(state.combo >= 3) addText(c.x-4, c.y-36, "x"+state.combo, "#fff1ae", 18);
+      state.shake = Math.max(state.shake, 2.5);
     }
   }
 
   if(!state.win && player.x > world.goalX){
     state.win = true;
-    addText(world.goalX, groundY-90, "DU VANDT ❤️", "#ffffff");
-    addParticles(world.goalX+40, groundY-60, "rgba(255,180,210,.95)", 24, 7);
+    addText(world.goalX, groundY-90, "DU VANDT ❤️", "#ffffff", 30);
+    addParticles(world.goalX+40, groundY-60, "rgba(255,180,210,.95)", 28, 8);
     showMessage("Du nåede målet ❤️", 2200);
   }
 
@@ -427,7 +421,7 @@ function drawEnemy(e){
   ctx.shadowColor="rgba(255,80,80,.32)";
   ctx.shadowBlur=18;
   const bob = Math.sin(e.bob||0) * 2;
-  const squash = 1 + Math.sin(e.bob||0) * 0.04;
+  const squash = 1 + Math.sin(e.bob||0) * 0.08;
   ctx.fillStyle = "#e44646";
   ctx.beginPath();
   ctx.ellipse(e.x + e.w/2, e.y + e.h/2 + bob, e.w/2*squash, e.h/2/squash, 0, 0, Math.PI*2);
@@ -439,7 +433,8 @@ function drawEnemy(e){
 }
 
 function drawSarah(){
-  const bob = (!player.onGround && player.vy < 0) ? -2 : (state.time % 40 < 20 ? 0 : 1);
+  const idleWave = player.onGround && Math.abs(player.vx) < 0.2 ? Math.sin(state.time*0.08 + player.idleSeed)*1.4 : 0;
+  const bob = (!player.onGround && player.vy < 0) ? -2 : (state.time % 40 < 20 ? 0 : 1) + idleWave;
   const drawW = player.w * player.squashX;
   const drawH = player.h * player.squashY;
   const x = player.x + (player.w-drawW)/2;
@@ -455,32 +450,55 @@ function drawSarah(){
   ctx.shadowColor="rgba(255,120,180,.28)";
   ctx.shadowBlur=20;
 
+  // ground shadow
   ctx.fillStyle="rgba(0,0,0,.18)";
   ctx.beginPath();
   ctx.ellipse(x+drawW/2, player.y+player.h-4, 14, 5, 0, 0, Math.PI*2);
   ctx.fill();
 
+  // hair back
   ctx.fillStyle="#9a6437";
   ctx.beginPath();
-  ctx.roundRect(x+8, y+4, drawW-16, 28, 10);
+  roundRectPath(x+8, y+4, drawW-16, 28, 10);
   ctx.fill();
 
+  // face
   ctx.fillStyle="#f6dfcf";
   ctx.beginPath();
-  ctx.roundRect(x+12, y+12, drawW-24, 24, 8);
+  roundRectPath(x+12, y+12, drawW-24, 24, 8);
   ctx.fill();
 
+  // side hair
   ctx.fillStyle="#8e5b34";
   ctx.fillRect(x+6, y+20, 8, 24);
   ctx.fillRect(x+drawW-14, y+20, 8, 24);
 
+  // earrings
+  ctx.fillStyle="#f2c456";
+  ctx.fillRect(x+drawW*0.24, y+24, 3, 3);
+  ctx.fillRect(x+drawW*0.71, y+24, 3, 3);
+
+  // eyes / blink
+  ctx.fillStyle="#3d2a34";
+  if(player.blink > 2){
+    ctx.fillRect(x+drawW*0.40, y+22, 3, 3);
+    ctx.fillRect(x+drawW*0.56, y+22, 3, 3);
+  } else {
+    ctx.fillRect(x+drawW*0.40, y+23, 3, 1);
+    ctx.fillRect(x+drawW*0.56, y+23, 3, 1);
+  }
+
+  // body
   ctx.fillStyle="#ef4ea7";
   ctx.fillRect(x+12, y+40, drawW-24, 20);
 
+  // arms with tiny sway
+  const sway = Math.sin(state.time*0.18)*(player.onGround?1:0.3);
   ctx.fillStyle="#ecc5ad";
-  ctx.fillRect(x+4, y+42, 8, 24);
-  ctx.fillRect(x+drawW-12, y+42, 8, 24);
+  ctx.fillRect(x+4, y+42+sway, 8, 24);
+  ctx.fillRect(x+drawW-12, y+42-sway, 8, 24);
 
+  // dress
   ctx.fillStyle="#f35aa8";
   ctx.beginPath();
   ctx.moveTo(x+12, y+60);
@@ -490,26 +508,34 @@ function drawSarah(){
   ctx.closePath();
   ctx.fill();
 
+  // dress highlight
   ctx.fillStyle="rgba(255,180,220,.32)";
   ctx.fillRect(x+drawW*0.38, y+70, drawW*0.24, drawH*0.26);
 
+  // legs
   ctx.fillStyle="#ecc5ad";
-  ctx.fillRect(x+drawW*0.40, y+drawH-16, 6, 14);
-  ctx.fillRect(x+drawW*0.54, y+drawH-16, 6, 14);
+  const step = Math.abs(player.vx) > 0.5 ? Math.sin(state.time*0.4)*2 : 0;
+  ctx.fillRect(x+drawW*0.40, y+drawH-16+step, 6, 14-step);
+  ctx.fillRect(x+drawW*0.54, y+drawH-16-step, 6, 14+step);
 
+  // shoes
   ctx.fillStyle="#fff";
-  ctx.fillRect(x+drawW*0.36, y+drawH-2, 10, 5);
-  ctx.fillRect(x+drawW*0.50, y+drawH-2, 10, 5);
-
-  ctx.fillStyle="#3d2a34";
-  ctx.fillRect(x+drawW*0.40, y+22, 3, 3);
-  ctx.fillRect(x+drawW*0.56, y+22, 3, 3);
-
-  ctx.fillStyle="#f2c456";
-  ctx.fillRect(x+drawW*0.24, y+24, 3, 3);
-  ctx.fillRect(x+drawW*0.71, y+24, 3, 3);
+  ctx.fillRect(x+drawW*0.36, y+drawH-2+step, 10, 5);
+  ctx.fillRect(x+drawW*0.50, y+drawH-2-step, 10, 5);
 
   ctx.restore();
+}
+
+function roundRectPath(x,y,w,h,r){
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
 }
 
 function drawGoal(){
@@ -579,7 +605,7 @@ function drawWorld(){
   for(const t of state.texts){
     ctx.globalAlpha=t.life/34;
     ctx.fillStyle=t.color;
-    ctx.font="bold 22px Arial";
+    ctx.font=`bold ${t.size||22}px Arial`;
     ctx.fillText(t.text, t.x, t.y);
     ctx.globalAlpha=1;
   }
